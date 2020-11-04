@@ -3,35 +3,20 @@ package SDM;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Customer implements Locatable
+public class Customer extends User implements Locatable
 {
-    private int id;
-    private String name;
+
     private Map<Integer, Order> historyOrders;
     private Location location;
 
-    public Customer(int id, String name, Location location) {
-        this.id = id;
-        this.name = name;
+    public Customer(String name, Location location,MoneyAccount moneyAccount)
+    {
+        super(name, Type.CUSTOMER);
         this.historyOrders = new HashMap<>();
         this.location = location;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public void addNewOrder(Order newOrder) {
         historyOrders.put(newOrder.getId(), newOrder);
@@ -69,6 +54,6 @@ public class Customer implements Locatable
 
     @Override
     public String toString() {
-        return String.format("Id: %d      Name: %s", id, name);
+        return String.format("Id: %d      Name: %s",this.id, this.name);
     }
 }
