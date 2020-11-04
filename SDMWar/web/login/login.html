@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <h2>Please enter your name and choose whether you are a seller or a buyer</h2>
-        <form method="POST" action="login">
+        <form id="loginTry" method="POST" action="../login">
             <div class="form-group">
                 <label>User name:</label>
                 <input type="text" class="form-control">
@@ -22,11 +22,14 @@
             <div class="radio">
                 <label><input type="radio" name="typeOfUser">Seller</label>
             </div>
-            <button type="submit" class="btn btn-info disabled">Sign Up</button>
+            <button type="submit" class="btn btn-outline-primary" id="submitButton">Sign Up</button>
         </form>
-        <div class="container-fluid" id="errorPlaceHolder">
-
+        <div class="container-fluid invisible" id="errorPlaceHolder">
+            <div class="alert alert-danger">
+                <strong>Warning!</strong> <span id="nameExists"></span> already exists in our system, please select other name.
+            </div>
         </div>
+        <a href="../dashBoard/dashboard.html" class="invisible" id="linkToDashBoard">Link to dashBoard</a>
     </div>
 </body>
 </html>

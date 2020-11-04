@@ -1,0 +1,8 @@
+.hoverDiv {
+    background: #fff;
+    transition-duration: 0.5s;
+}
+
+.hoverDiv:hover {
+    background: #a1add2;
+}
