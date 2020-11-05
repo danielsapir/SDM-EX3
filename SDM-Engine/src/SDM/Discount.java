@@ -1,10 +1,5 @@
 package SDM;
 
-import SDM.jaxb.schema.generated.IfYouBuy;
-import SDM.jaxb.schema.generated.ThenYouGet;
-
-import javax.xml.bind.annotation.XmlElement;
-
 public class Discount
 {
 

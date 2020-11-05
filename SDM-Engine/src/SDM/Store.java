@@ -1,8 +1,5 @@
 package SDM;
 
-import SDM.jaxb.schema.generated.SDMDiscount;
-import SDM.jaxb.schema.generated.SDMDiscounts;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

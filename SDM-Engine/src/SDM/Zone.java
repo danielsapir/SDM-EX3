@@ -2,13 +2,21 @@ package SDM;
 
 import SDM.Exception.*;
 import SDM.jaxb.schema.XMLHandlerBaseOnSchema;
+import com.sun.org.apache.xml.internal.security.keys.storage.StorageResolverSpi;
 import javafx.beans.property.SimpleBooleanProperty;
+
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class SDMEngine {
+
+
+//בגרסא הזאת ה"זון" הוא סתם העתק של "אנגין"
+public class Zone
+{
+    private String name;
+    private Owner owner;
 
     private Map<Integer, Store> allStores = new HashMap<>();
     private Map<Integer, Item> allItems = new HashMap<>();
@@ -268,6 +276,7 @@ public class SDMEngine {
         return st.removeItem(item);
     }
 }
+
 
 
 
