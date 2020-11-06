@@ -21,13 +21,27 @@ import java.util.function.Consumer;
 public class XMLHandlerBaseOnSchema {
     private List<Store> stores = null;
     private Map<Integer, Item> items = null;
-    private Map<Integer, Customer> costumers = null;
-    private Consumer<String> updateGuiWithProgressMessage;
-    private Consumer<Double> updateGuiWithProgressPercent;
+    //private Map<Integer, Customer> costumers = null;
 
+
+    /*
     public Map<Integer, Customer> getCostumers() {
         return costumers;
     }
+
+    */
+
+    public Map<Integer,Store> getStoresMap()
+    {
+        Map<Integer, Store> allStores = new HashMap<>();
+
+        for (Store st : stores) {
+            allStores.put(st.getId(), st);
+        }
+        return allStores;
+    }
+
+
 
     public List<Store> getStores() {
         return stores;
@@ -37,30 +51,63 @@ public class XMLHandlerBaseOnSchema {
         return items;
     }
 
-    public void updateStoresAndItemsAndCostumers(String stPath, Consumer<String> updateGuiWithProgressMessage, Consumer<Double> updateGuiWithProgressPercent) throws FileNotFoundException, JAXBException, FileNotEndWithXMLException, DuplicateItemException, LocationIsOutOfBorderException, DuplicateStoreIDException, DuplicateStoreItemException, TryingToGivePriceOfItemWhichIDNotExistException, TryingToGiveDifferentPricesForSameStoreItemException, DuplicateCustomerIdException, DuplicatedLocationException, DiscountWithItemNotSoldByStoreException {
-        this.updateGuiWithProgressMessage = updateGuiWithProgressMessage;
-        this.updateGuiWithProgressPercent = updateGuiWithProgressPercent;
+    public Zone updateZone(String stPath) throws FileNotFoundException, JAXBException, FileNotEndWithXMLException, DuplicateItemException, LocationIsOutOfBorderException, DuplicateStoreIDException, DuplicateStoreItemException, TryingToGivePriceOfItemWhichIDNotExistException, TryingToGiveDifferentPricesForSameStoreItemException, DuplicateCustomerIdException, DuplicatedLocationException, DiscountWithItemNotSoldByStoreException, ItemNoOneSellException, StoreWithNoItemException {
 
-        this.updateGuiWithProgressMessage.accept("Fetching File...");
-        this.updateGuiWithProgressPercent.accept(0.0);
-        ThreadSleepProxy.goToSleep(500);
         SuperDuperMarketDescriptor sdmDescriptor = this.fromStringPathToDescriptor(stPath);
-        this.updateGuiWithProgressMessage.accept("Fetching Items...");
-        this.updateGuiWithProgressPercent.accept(0.1);
-        ThreadSleepProxy.goToSleep(500);
+
         parseFromSDMItemToItem(sdmDescriptor);
-        this.updateGuiWithProgressMessage.accept("Fetching Stores...");
-        this.updateGuiWithProgressPercent.accept(0.2);
-        ThreadSleepProxy.goToSleep(500);
         parseFromSDMStoresToStores(sdmDescriptor);
-        this.updateGuiWithProgressMessage.accept("Fetching Customers...");
-        this.updateGuiWithProgressPercent.accept(0.5);
-        ThreadSleepProxy.goToSleep(500);
         //parseFromSDMCustomersToCustomers(sdmDescriptor);
 
         verifyNoDuplicatedLocations();
 
+        updateAllItemWithTheStoresWhoSellThem(items, getStoresMap());
+        verifyEveryItemSoldByAtLeastOneStore(items);
+        verifyEveryStoreSellAtLeastOneItem(getStoresMap());
+
+        Zone resZone=new Zone();
+        resZone.setAllStores(getStoresMap());
+        resZone.setAllItems(this.getItems());
+        resZone.setName(sdmDescriptor.getSDMZone().getName());
+
+        return (resZone);
     }
+
+    private void verifyEveryStoreSellAtLeastOneItem(Map<Integer, Store> tempAllStores) throws StoreWithNoItemException {
+        for(Store store : tempAllStores.values()) {
+            if(store.getItemsThatSellInThisStore().size() == 0) {
+                throw new StoreWithNoItemException(store.getId());
+            }
+        }
+    }
+
+
+
+
+
+    private void verifyEveryItemSoldByAtLeastOneStore(Map<Integer, Item> tempAllItems) throws ItemNoOneSellException {
+        for(Item item : tempAllItems.values()) {
+            if(item.getStoresSellThisItem().size() == 0) {
+                throw new ItemNoOneSellException(item.getId());
+            }
+        }
+    }
+
+
+
+
+
+    private void updateAllItemWithTheStoresWhoSellThem(Map<Integer, Item> tempAllItems, Map<Integer, Store> tempAllStores) {
+        for (Item item : tempAllItems.values()) {
+            for (Store st : tempAllStores.values()) {
+                if (st.getItemsThatSellInThisStore().containsKey(item.getId())) {
+                    item.setStoresSellThisItem(st);
+                }
+            }
+        }
+    }
+
+
 
     private void verifyNoDuplicatedLocations() throws DuplicatedLocationException {
         Set<Location> locations = new HashSet<>();
@@ -72,6 +119,7 @@ public class XMLHandlerBaseOnSchema {
                 locations.add(store.getLocation());
             }
         }
+        /*
         for (Customer customer : costumers.values()) {
             if (locations.contains(customer.getLocation())) {
                 throw new DuplicatedLocationException(customer.getLocation());
@@ -79,6 +127,8 @@ public class XMLHandlerBaseOnSchema {
                 locations.add(customer.getLocation());
             }
         }
+
+         */
     }
 
     private SuperDuperMarketDescriptor fromStringPathToDescriptor(String inpPath) throws FileNotFoundException, JAXBException, FileNotEndWithXMLException {
@@ -162,12 +212,7 @@ public class XMLHandlerBaseOnSchema {
         List<SDMStore> sdmStores = sdmObj.getSDMStores().getSDMStore();
         this.stores = new ArrayList<>();
         Store st;
-        this.updateGuiWithProgressMessage.accept("Fetching Items in Stores...");
-        this.updateGuiWithProgressPercent.accept(0.3);
-        ThreadSleepProxy.goToSleep(1000);
-        this.updateGuiWithProgressMessage.accept("Fetching Discounts of Stores...");
-        this.updateGuiWithProgressPercent.accept(0.4);
-        ThreadSleepProxy.goToSleep(1000);
+
 
         for (SDMStore sdmSt : sdmStores) {
             //st=new Store();

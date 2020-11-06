@@ -2,23 +2,49 @@ package SDM;
 
 import SDM.Exception.*;
 import SDM.jaxb.schema.XMLHandlerBaseOnSchema;
-import javafx.beans.property.SimpleBooleanProperty;
+
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class SDMEngine {
 
+    /*
     private Map<Integer, Store> allStores = new HashMap<>();
     private Map<Integer, Item> allItems = new HashMap<>();
     private Map<Integer, Customer> allCustomers = new HashMap<>();
     private List<Order> allOrders;
     private Order currentOrder;
     private Map<Integer, StoreItem> allStoreItemsWithPriceForSpecificStore = new HashMap<>(); //private Map for storeItems to show to UI
-    private boolean xmlFileLoaded = false;
     private SimpleBooleanProperty anyOrderMade = new SimpleBooleanProperty(false);
+    */
 
+    Map<String,Zone> allZones=new HashMap<>();
+
+
+    public void loadXMLToZone(String stPath, Owner owner)
+            throws DuplicateStoreIDException, DuplicateStoreItemException, LocationIsOutOfBorderException, JAXBException, FileNotFoundException, DuplicateItemException, FileNotEndWithXMLException, TryingToGivePriceOfItemWhichIDNotExistException, TryingToGiveDifferentPricesForSameStoreItemException, ItemNoOneSellException, StoreWithNoItemException, DuplicatedLocationException, DuplicateCustomerIdException, DiscountWithItemNotSoldByStoreException
+    {
+        XMLHandlerBaseOnSchema xmlHandler = new XMLHandlerBaseOnSchema();
+        Zone zone= xmlHandler.updateZone(stPath);
+        zone.setOwner(owner);
+        zone.getOwner().addStoresToOwner(zone.getAllStoresMap());//מטודה באונר שמוסיפה את החנויות למפ באונר
+
+        allZones.put(zone.getName(), zone);
+
+        /*
+        ////אין לי מושג כרגע איפה זה אמור להיות ולא אכפת לי////
+        for (Store st : xmlHandler.getStores()) {
+            this.allStores.put(st.getId(), st);
+        }
+         */
+    }
+
+
+
+
+
+    /*
     public List<Customer> getAllCustomers() {
         return (new ArrayList<>(allCustomers.values()));
     }
@@ -64,7 +90,7 @@ public class SDMEngine {
         Map<Integer, Customer> tempAllCustomers ;
 
         XMLHandlerBaseOnSchema xmlHandler = new XMLHandlerBaseOnSchema();
-        xmlHandler.updateStoresAndItemsAndCostumers(stPath, updateGuiWithProgressMessage, updateGuiWithProgressPercent);
+        xmlHandler.updateZone(stPath, updateGuiWithProgressMessage, updateGuiWithProgressPercent);
 
         tempAllItems = xmlHandler.getItems();
 
@@ -267,6 +293,8 @@ public class SDMEngine {
     public boolean removeItemFromStore(Store st, Item item) throws Exception {
         return st.removeItem(item);
     }
+
+     */
 }
 
 
