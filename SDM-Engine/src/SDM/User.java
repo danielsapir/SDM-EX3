@@ -45,6 +45,13 @@ public class User
 
     public int getId() {return id;}
 
+    public Type getType() {
+        return type;
+    }
+
+    public MoneyAccount getMoneyAccount() {
+        return moneyAccount;
+    }
 
     ///Color c1 = Color.RED;
 }

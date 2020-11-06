@@ -19,7 +19,7 @@ public class SDMEngine {
     private SimpleBooleanProperty anyOrderMade = new SimpleBooleanProperty(false);
     */
 
-    Map<String,Zone> allZones=new HashMap<>();
+    private Map<String,Zone> allZones=new HashMap<>();
 
 
     public void loadXMLToZone(String stPath, Owner owner)
@@ -38,6 +38,10 @@ public class SDMEngine {
             this.allStores.put(st.getId(), st);
         }
          */
+    }
+
+    public Zone getZoneByName(String zoneName) {
+        return allZones.get(zoneName);
     }
 
 

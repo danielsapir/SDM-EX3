@@ -9,7 +9,7 @@ $(function () {
             reqtype: "user-info"
         },
 
-        //user = {userName:"moshe", userType:"owner/customer",...}
+        //user = {userName:"moshe", userType:"OWNER/CUSTOMER",...}
         success: function (user) {
             $("#user-name-placeholder").text(user.userName);
             userType = user.userType;
@@ -32,7 +32,7 @@ function allUserUpdate() {
             reqtype: "all-users"
         },
 
-        //users = [{userName:"moshe", userType:"owner/customer",...} , {userName:"daniel", userType:"owner/customer",...}...]
+        //users = [{userName:"moshe", userType:"OWNER/CUSTOMER",...} , {userName:"daniel", userType:"OWNER/CUSTOMER",...}...]
         success: function (users) {
             $("#usersPlaceHolder").empty();
             users.each([] || users, function (index, user) {
@@ -75,7 +75,7 @@ function updateZonesData() {
                               url: "GET",
                               data: {
                                   reqtype: "to-zone",
-                                  zone: rowName
+                                  currentZone: rowName
                               },
                               success: function (newPageURI) {
                                 window.location.assign(window.location.hostname + buildUrlWithContextPath(newPageURI));
