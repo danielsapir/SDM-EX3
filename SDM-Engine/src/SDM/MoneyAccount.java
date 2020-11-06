@@ -10,8 +10,15 @@ public class MoneyAccount
     private double amount=0;
     private List<Transaction> transactions =new LinkedList<>();
 
+    public double getAmount() {
+        return amount;
+    }
 
-    public void TransferMoneyToAnotherAccount(double amountToTransfer,MoneyAccount moneyAccount,Date date)
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void TransferMoneyToAnotherAccount(double amountToTransfer, MoneyAccount moneyAccount, Date date)
     {
         Transaction transactionAccountTransferMoney=new Transaction(Transaction.Type.TransferPayment, date,amountToTransfer,amount,amount+amountToTransfer);
         this.transactions.add(transactionAccountTransferMoney);

@@ -1,8 +1,11 @@
 package servlets;
 
+import SDM.SDMEngine;
 import SDM.User;
 import SDM.UserManager;
+import SDM.Zone;
 import com.google.gson.Gson;
+import com.google.gson.internal.$Gson$Preconditions;
 import constants.Constants;
 import utils.ServletUtils;
 import utils.SessionUtils;
@@ -12,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
 
 public class DashboardServlet extends HttpServlet {
 
@@ -24,6 +29,9 @@ public class DashboardServlet extends HttpServlet {
     private static final String TRANSACTIONS_INFO = "transactions-info";
     private static final String DEPOSIT_MONEY = "deposit-money";
 
+    private static final String DEPOSIT_AMOUNT = "depositAmount";
+    private static final String DEPOSIT_DATE = "date";
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
@@ -33,10 +41,15 @@ public class DashboardServlet extends HttpServlet {
         String userName = SessionUtils.getUsername(req);
         User user = userManager.getUserByName(userName);
 
-        String response = handleGetRequestType(reqType, user);
+        String response = handleGetRequestType(reqType, user, req);
+
+        try(PrintWriter out = resp.getWriter()) {
+            out.println(response);
+            out.flush();
+        }
     }
 
-    private String handleGetRequestType(String reqType, User user) {
+    private String handleGetRequestType(String reqType, User user, HttpServletRequest req) {
         String jsonRes = null;
 
         switch (reqType) {
@@ -50,9 +63,31 @@ public class DashboardServlet extends HttpServlet {
                 jsonRes = allZoneInfoMaker();
                 break;
             case TO_ZONE:
-
+                jsonRes = changeToZoneScreen(req);
+                break;
+            case MONEY_AMOUNT:
+                jsonRes = Double.toString(user.getMoneyAccount().getAmount());
+                break;
+            case TRANSACTIONS_INFO:
+                jsonRes = allTransactionsMaker(user);
+                break;
         }
+
         return reqType;
+    }
+
+    private String allTransactionsMaker(User user) {
+        Gson gson = new Gson();
+        return gson.toJson(user.getMoneyAccount().getTransactions());
+    }
+
+    private String changeToZoneScreen(HttpServletRequest req) {
+        SDMEngine sdmEngine = ServletUtils.getSDMEngine(getServletContext());
+        Zone currentZone = sdmEngine.getZoneByName(req.getParameter(Constants.CURRENT_ZONE));
+
+        req.getSession(true).setAttribute(Constants.CURRENT_ZONE, currentZone);
+
+        return "zoneDashBoard";
     }
 
     private String allZoneInfoMaker() {
@@ -85,11 +120,16 @@ public class DashboardServlet extends HttpServlet {
         String userName = SessionUtils.getUsername(req);
         User user = userManager.getUserByName(userName);
 
-        String response = handlePostRequestType(user, reqType);
+        String response = handlePostRequestType(user, reqType, req);
     }
 
-    private String handlePostRequestType(User user, String reqType) {
+    private String handlePostRequestType(User user, String reqType, HttpServletRequest req) {
+        switch (reqType) {
+            case DEPOSIT_MONEY:
+                double amountToDeposit = Double.parseDouble(req.getParameter(DEPOSIT_AMOUNT));
+                Date dateOfDeposit = new Date();
 
-        return reqType;
+                depositMoneyToUser(user,)
+        }
     }
 }
