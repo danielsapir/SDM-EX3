@@ -4,9 +4,23 @@ import com.sun.deploy.security.ValidationState;
 
 public class User
 {
-    enum Type
+    public enum Type
     {
         CUSTOMER, OWNER;
+
+        public static Type stringToType(String type) {
+            if(type==null || type.isEmpty()) {
+                return CUSTOMER;
+            }
+            else {
+                if(type.equals(CUSTOMER.toString())) {
+                    return CUSTOMER;
+                }
+                else {
+                    return OWNER;
+                }
+            }
+        }
     }
 
     protected Type type;
@@ -28,6 +42,8 @@ public class User
     public String getName() {
         return name;
     }
+
+    public int getId() {return id;}
 
 
     ///Color c1 = Color.RED;

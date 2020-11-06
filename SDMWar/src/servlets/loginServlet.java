@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import SDM.SDMEngine;
+import SDM.User;
+import SDM.UserManager;
 import com.google.gson.Gson;
 import constants.Constants;
 import utils.ServletUtils;
@@ -26,20 +28,21 @@ public class loginServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        String usernameFromSession = SessionUtils.getUsername(req);
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
 
         String usernameFromParameter = req.getParameter(Constants.USERNAME);
+        User.Type userTypeFromParameter = User.Type.stringToType(req.getParameter(Constants.USERTYPE));
+
         usernameFromParameter = usernameFromParameter.trim();
 
         synchronized (this) {
             LoginResult loginResult = new LoginResult();
-            if (userManager.isUserExists(usernameFromParameter)) {
+            if (userManager.IsUserAlreadyExist(usernameFromParameter)) {
                 loginResult.setLoginRes(false);
                 loginResult.setLoginName(usernameFromParameter);
             }
             else {
-                userManager.addUser(usernameFromParameter);
+                userManager.addUser(usernameFromParameter, userTypeFromParameter);
                 req.getSession(true).setAttribute(Constants.USERNAME, usernameFromParameter);
                 loginResult.setLoginRes(true);
                 loginResult.setLoginName(usernameFromParameter);
