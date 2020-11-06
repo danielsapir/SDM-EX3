@@ -1,6 +1,8 @@
 package utils;
 
 import SDM.SDMEngine;
+import SDM.UserManager;
+
 import javax.servlet.ServletContext;
 
 public class ServletUtils {

@@ -13,7 +13,11 @@ public class SessionUtils {
         Object sessionAttribute = session != null ? session.getAttribute(Constants.USERNAME) : null;
         return sessionAttribute != null ? sessionAttribute.toString() : null;
     }
-    
+    /*
+    public static Zone getCurrentZone (HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        return (Zone)
+    */
     public static void clearSession (HttpServletRequest request) {
         request.getSession().invalidate();
     }

@@ -7,14 +7,25 @@
     <link rel="stylesheet" href="../bootstrap.min.css">
     <link rel="stylesheet" href="dashboard.css">
     <script src="../jquery-3.5.1.min.js"></script>
+    <script src="../popper.min.js"></script>
+    <script src="../bootstrap.min.js"></script>
+    <script src="../context-path-helper.js"></script>
+    <script src="../common/modalFixer.js"></script>
     <script src="dashboard.js"></script>
+
 </head>
 <body>
 <div class="container-fluid">
     <nav class="navbar navbar-light bg-light" id="welcome-header">
         <span><strong>Welcome!</strong> <span id="user-name-placeholder"></span> hope you are enjoying our system!</span>
     </nav>
-    <<nav class="navbar navbar-light bg-light" id="welcome-header">
+    <nav class="navbar navbar-light bg-light border border-dark" id="xml-header" class="owner-only">
+        <form id="uploadFile">
+            <div class="form-group">
+                <label for="ChooseFile">Please choose the xml file you would like to upload</label>
+                <input type="file" class="form-control-file" id="ChooseFile" accept=".xml">
+            </div>
+        </form>
     </nav>
     <div class="row">
         <table id="zones-table" class="table table-hover col-sm-8">
@@ -29,26 +40,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>John</td>
-                <td>Doe</td>
-                <td>john@example.com</td>
-            </tr>
-            <tr>
-                <td>Mary</td>
-                <td>Moe</td>
-                <td>mary@example.com</td>
-            </tr>
-            <tr>
-                <td>July</td>
-                <td>Dooley</td>
-                <td>july@example.com</td>
-            </tr>
             </tbody>
         </table>
         <div class="col-sm-4 border border-primary hoverDiv">
             <h4>Users connected:</h4>
-            <ol id="userPlaceHolder">
+            <ol id="usersPlaceHolder">
 
             </ol>
         </div>
@@ -57,20 +53,23 @@
         <div class="col-sm-4 border border-dark">
             <h4>The amount of money in your account: <span id="moneyPlaceHolder"></span></h4>
         </div>
+
         <div class="col-sm-8 border border-info customer-only">
-            <div class="form-group row">
+            <form id="deposit-form"><div class="form-group row">
                 <h5>How much do you want to deposit?</h5>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" name="depositAmount" alt="deposit amount">
+                    <input type="text" value="0" class="form-control" name="depositAmount" alt="deposit amount" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
                 </div>
                 <div class="col-sm-3">
-                    <input type="date" class="form-control" name="date">
+                    <input type="date" class="form-control" name="date" id="date-input">
                 </div>
                 <div class="col-sm-2">
                     <input type="submit" alt="deposit" class="form-control btn btn-outline-primary" value="deposit">
                 </div>
             </div>
+            </form>
         </div>
+
     </div>
     <div class="row">
         <h3 class="col-sm-12">
@@ -89,24 +88,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>John</td>
-                <td>Doe</td>
-                <td>john@example.com</td>
-            </tr>
-            <tr>
-                <td>Mary</td>
-                <td>Moe</td>
-                <td>mary@example.com</td>
-            </tr>
-            <tr>
-                <td>July</td>
-                <td>Dooley</td>
-                <td>july@example.com</td>
-            </tr>
             </tbody>
         </table>
     </div>
+    <div id="modalPlace">
+
+    </div>
 </div>
+
+
 </body>
 </html>

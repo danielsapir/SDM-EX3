@@ -1,8 +1,9 @@
 var numberOfTries = 0;
+var LOGIN_URL = buildUrlWithContextPath("login");
 
 function signUpClick(formLogin) {
         $.ajax({
-            url:"../login",
+            url:LOGIN_URL,
             type:"POST",
             data: formLogin.serialize(),
 
