@@ -2,52 +2,72 @@ package SDM;
 
 import SDM.Exception.*;
 import SDM.jaxb.schema.XMLHandlerBaseOnSchema;
+import com.sun.org.apache.xml.internal.security.keys.storage.StorageResolverSpi;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.function.Consumer;
 
-public class SDMEngine {
 
-    /*
+
+
+public class Zone
+{
+
+    private String name;
+    private Owner owner;
+
     private Map<Integer, Store> allStores = new HashMap<>();
     private Map<Integer, Item> allItems = new HashMap<>();
-    private Map<Integer, Customer> allCustomers = new HashMap<>();
-    private List<Order> allOrders;
+    //private Map<Integer, Customer> allCustomers = new HashMap<>();
+    //private List<Order> allOrders;
+    //private boolean xmlFileLoaded = false;
     private Order currentOrder;
     private Map<Integer, StoreItem> allStoreItemsWithPriceForSpecificStore = new HashMap<>(); //private Map for storeItems to show to UI
     private SimpleBooleanProperty anyOrderMade = new SimpleBooleanProperty(false);
-    */
-
-    Map<String,Zone> allZones=new HashMap<>();
 
 
-    public void loadXMLToZone(String stPath, Owner owner)
-            throws DuplicateStoreIDException, DuplicateStoreItemException, LocationIsOutOfBorderException, JAXBException, FileNotFoundException, DuplicateItemException, FileNotEndWithXMLException, TryingToGivePriceOfItemWhichIDNotExistException, TryingToGiveDifferentPricesForSameStoreItemException, ItemNoOneSellException, StoreWithNoItemException, DuplicatedLocationException, DuplicateCustomerIdException, DiscountWithItemNotSoldByStoreException
-    {
-        XMLHandlerBaseOnSchema xmlHandler = new XMLHandlerBaseOnSchema();
-        Zone zone= xmlHandler.updateZone(stPath);
-        zone.setOwner(owner);
-        zone.getOwner().addStoresToOwner(zone.getAllStoresMap());//מטודה באונר שמוסיפה את החנויות למפ באונר
-
-        allZones.put(zone.getName(), zone);
-
-        /*
-        ////אין לי מושג כרגע איפה זה אמור להיות ולא אכפת לי////
-        for (Store st : xmlHandler.getStores()) {
-            this.allStores.put(st.getId(), st);
-        }
-         */
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public Owner getOwner() {
+        return owner;
+    }
 
+    public void setOwner(Owner owner) {
+        this.owner = owner;
+    }
 
+    public void setAllStores(Map<Integer, Store> allStores) {
+        this.allStores = allStores;
+    }
 
+    public void setAllItems(Map<Integer, Item> allItems) {
+        this.allItems = allItems;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     /*
     public List<Customer> getAllCustomers() {
         return (new ArrayList<>(allCustomers.values()));
     }
+
+      public List<Order> getAllOrders() {
+        return allOrders;
+    }
+
+    public boolean isXMLFileLoaded() {
+        return xmlFileLoaded;
+    }
+
+
+     */
 
     public Map<Integer, Store> getAllStoresMap() {
         return this.allStores;
@@ -63,10 +83,6 @@ public class SDMEngine {
 
 
 
-    public List<Order> getAllOrders() {
-        return allOrders;
-    }
-
     public Order getCurrentOrder() {
         return currentOrder;
     }
@@ -75,58 +91,11 @@ public class SDMEngine {
         return new ArrayList<>(allStoreItemsWithPriceForSpecificStore.values());
     }
 
-    public boolean isXMLFileLoaded() {
-        return xmlFileLoaded;
-    }
 
     public Item.ItemType getItemTypeByID(int itemID) {
         return allItems.get(itemID).getType();
     }
 
-    public void updateAllStoresAndAllItemsAndAllCustomers(String stPath, Consumer<String> updateGuiWithProgressMessage, Consumer<Double> updateGuiWithProgressPercent)
-            throws DuplicateStoreIDException, DuplicateStoreItemException, LocationIsOutOfBorderException, JAXBException, FileNotFoundException, DuplicateItemException, FileNotEndWithXMLException, TryingToGivePriceOfItemWhichIDNotExistException, TryingToGiveDifferentPricesForSameStoreItemException, ItemNoOneSellException, StoreWithNoItemException, DuplicatedLocationException, DuplicateCustomerIdException, DiscountWithItemNotSoldByStoreException {
-        Map<Integer, Item> tempAllItems;
-        Map<Integer, Store> tempAllStores = new HashMap<>();
-        Map<Integer, Customer> tempAllCustomers ;
-
-        XMLHandlerBaseOnSchema xmlHandler = new XMLHandlerBaseOnSchema();
-        xmlHandler.updateZone(stPath, updateGuiWithProgressMessage, updateGuiWithProgressPercent);
-
-        tempAllItems = xmlHandler.getItems();
-
-        tempAllCustomers= xmlHandler.getCostumers();
-
-        //convert List of store to Map of<int id,Store)
-        for (Store st : xmlHandler.getStores()) {
-            tempAllStores.put(st.getId(), st);
-        }
-        updateGuiWithProgressMessage.accept("Connecting Item To The Store That Sells Them...");
-        updateGuiWithProgressPercent.accept(0.6);
-        ThreadSleepProxy.goToSleep(500);
-        updateAllItemWithTheStoresWhoSellThem(tempAllItems, tempAllStores);
-
-        updateGuiWithProgressMessage.accept("Verify Every Item is sold by at least one store ...");
-        updateGuiWithProgressPercent.accept(0.7);
-        ThreadSleepProxy.goToSleep(500);
-        verifyEveryItemSoldByAtLeastOneStore(tempAllItems);
-
-        updateGuiWithProgressMessage.accept("Verify Every Store sells at least one item ...");
-        updateGuiWithProgressPercent.accept(0.8);
-        ThreadSleepProxy.goToSleep(500);
-        verifyEveryStoreSellAtLeastOneItem(tempAllStores);
-
-        updateGuiWithProgressMessage.accept("Saving all the information in our data base...");
-        updateGuiWithProgressPercent.accept(0.9);
-        ThreadSleepProxy.goToSleep(500);
-        xmlFileLoaded = true;
-        allStores = tempAllStores;
-        allItems = tempAllItems;
-
-        allCustomers = tempAllCustomers;
-
-        allOrders = new LinkedList<>();
-
-    }
 
 
     private void updateAllItemWithTheStoresWhoSellThem(Map<Integer, Item> tempAllItems, Map<Integer, Store> tempAllStores) {
@@ -191,6 +160,9 @@ public class SDMEngine {
         }
     }
 
+
+    /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ORDER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     public void createNewDynamicOrder(Customer customerEX1, Date dateOrder) {
         currentOrder = Order.makeNewOrder(customerEX1, dateOrder, null, OrderType.DYNAMIC_ORDER);
     }
@@ -246,6 +218,7 @@ public class SDMEngine {
     public void cancelCurrentOrder() {
         currentOrder = null;
     }
+    */
 
     private int getPriceOfItemInThisStoreORZero(int itemId, Store store) {
         int resPrice = 0;
@@ -265,10 +238,13 @@ public class SDMEngine {
         return (allStoreItemsWithPriceForSpecificStore.get(choosedItemNumber).getPrice()) != 0;
     }
 
+    /*
     public void addNewItemToStore(int storeID, Item itemToAdd, int priceOfItem) {
         //Store storeToAddItem = allStores.get(storeID).addNewItem();
         //storeToAddItem.getItemsThatSellInThisStore().
     }
+
+     */
 
 
 
@@ -294,8 +270,18 @@ public class SDMEngine {
         return st.removeItem(item);
     }
 
-     */
+   ///noy 6/11
+    //move on allStore in zone and update store owner
+    public void addOwnerToAllStores(Owner owner)
+    {
+        for (Store st:this.allStores.values())
+        {
+            st.setOwner(owner);
+        }
+    }
+
 }
+
 
 
 
