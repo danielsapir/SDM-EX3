@@ -1,8 +1,5 @@
 package SDM;
 
-import SDM.jaxb.schema.generated.SDMDiscount;
-import SDM.jaxb.schema.generated.SDMDiscounts;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,20 +8,26 @@ import java.util.Map;
 public class Store implements Locatable
 {
 
+    private Owner owner;
+
+
+
     private int id;
     private String name;
     private int deliveryPPK;
     private Location location;
     private Map<Integer, StoreItem> itemsThatSellInThisStore=new HashMap<>();
     private List<OneStoreOrder> orders= new LinkedList<>();
-    //NOY 26/9
+
     private List<Discount> discounts= new LinkedList<>();
 
     public List<Discount> getDiscounts() {
         return discounts;
     }
 
-
+    public void setOwner(Owner owner) {
+        this.owner = owner;
+    }
     public int getId()
     {
         return id;
