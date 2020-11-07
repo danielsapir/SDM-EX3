@@ -7,6 +7,8 @@ import SDM.Zone;
 import com.google.gson.Gson;
 import com.google.gson.internal.$Gson$Preconditions;
 import constants.Constants;
+import org.omg.CORBA.DATA_CONVERSION;
+import utils.DateUtils;
 import utils.ServletUtils;
 import utils.SessionUtils;
 
@@ -29,6 +31,7 @@ public class DashboardServlet extends HttpServlet {
     private static final String TRANSACTIONS_INFO = "transactions-info";
     private static final String DEPOSIT_MONEY = "deposit-money";
 
+    //Request parameters constants
     private static final String DEPOSIT_AMOUNT = "depositAmount";
     private static final String DEPOSIT_DATE = "date";
 
@@ -73,7 +76,7 @@ public class DashboardServlet extends HttpServlet {
                 break;
         }
 
-        return reqType;
+        return jsonRes;
     }
 
     private String allTransactionsMaker(User user) {
@@ -124,12 +127,22 @@ public class DashboardServlet extends HttpServlet {
     }
 
     private String handlePostRequestType(User user, String reqType, HttpServletRequest req) {
+        String response = null;
+
         switch (reqType) {
             case DEPOSIT_MONEY:
                 double amountToDeposit = Double.parseDouble(req.getParameter(DEPOSIT_AMOUNT));
-                Date dateOfDeposit = new Date();
+                Date dateOfDeposit = DateUtils.jsonDateToJavaDate(req.getParameter(DEPOSIT_DATE));
+                depositMoneyToUser(user, amountToDeposit, dateOfDeposit);
+                break;
+        }
 
-                depositMoneyToUser(user,)
+        return response;
+    }
+
+    private void depositMoneyToUser(User user, double amountToDeposit, Date dateOfDeposit) {
+        synchronized (user) {
+            user.getMoneyAccount().LoadingMoneyInMyAccount(amountToDeposit, dateOfDeposit);
         }
     }
 }

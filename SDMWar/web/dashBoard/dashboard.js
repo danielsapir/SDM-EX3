@@ -35,8 +35,8 @@ function allUserUpdate() {
         //users = [{userName:"moshe", userType:"OWNER/CUSTOMER",...} , {userName:"daniel", userType:"OWNER/CUSTOMER",...}...]
         success: function (users) {
             $("#usersPlaceHolder").empty();
-            users.each([] || users, function (index, user) {
-                $("#usersPlaceHolder").append("<li><ul><li>" + user.userName + "</li><li>" + user.userType + "</li></ul></li>");
+            $.each(users || [], function (index, user) {
+                $("#usersPlaceHolder").append("<li><ul><li>" + user.name + "</li><li>" + user.type + "</li></ul></li>");
             })
         }
     })
@@ -57,7 +57,7 @@ function updateZonesData() {
             var zoneTableBody = $("#zones-table").find("tbody");
             zoneTableBody.empty();
 
-            zones.each([] || zones, function (index, zone) {
+            $.each(zones || [], function (index, zone) {
                 var newTableRow = $(("<tr data-value='" + zone.zoneName +"'>" +
                     "<td>" + zone.owner + "</td>" +
                     "<td>" + zone.zoneName + "</td>" +
@@ -125,10 +125,10 @@ function updateTransactions() {
             var transactionsTableBody = $("#transactions-table").find("tbody");
             transactionsTableBody.empty();
 
-            transactions.each([] || transactions, function (index, transaction) {
+            $.each(transactions || [], function (index, transaction) {
                 transactionsTableBody.append("<tr>" +
-                    "<td>" + transaction.transactionType +  "</td>" +
-                    "<td>" + transaction.dateMade + "</td>" +
+                    "<td>" + transaction.type +  "</td>" +
+                    "<td>" + transaction.date + "</td>" +
                     "<td>" + transaction.amountOfAction + "</td>" +
                     "<td>" + transaction.amountBeforeOperation + "</td>" +
                     "<td>" + transaction.amountAfterOperation + "</td>" +

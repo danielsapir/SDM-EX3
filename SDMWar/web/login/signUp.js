@@ -7,14 +7,14 @@ function signUpClick(formLogin) {
             type:"POST",
             data: formLogin.serialize(),
 
-            //res = {"result":true/false, "name":"moshe"}
+            //res = {loginRes:true/false, loginName:"moshe"}
             success: function (res) {
-                if(res.result===true) {
-                    $("#linkToDashBoard").click();
+                if(res.loginRes===true) {
+                    document.getElementById('linkToDashBoard').click();
                 }
                 else {
                     $("#errorPlaceHolder").removeClass("invisible");
-                    $("#nameExists").innerText = res.name;
+                    $("#nameExists").innerText = res.loginName;
                 }
             },
             error: function () {
@@ -28,11 +28,16 @@ function signUpClick(formLogin) {
                         "            </div>")
                 }
 
-                setTimeout(signUpClick, 1000);
+                setTimeout(submitClick, 1000);
             }
         });
-        return false;
+
 }
+
+function submitClick() {
+    signUpClick($("#loginTry"));
+}
+
 
 
 $(function () {
@@ -41,6 +46,7 @@ $(function () {
 
     formLogin.submit(function () {
         signUpClick(formLogin);
+        return false;
     });
 });
 
