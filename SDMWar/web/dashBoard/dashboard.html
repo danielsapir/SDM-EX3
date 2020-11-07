@@ -11,19 +11,21 @@
     <script src="../bootstrap.min.js"></script>
     <script src="../context-path-helper.js"></script>
     <script src="../common/modalFixer.js"></script>
+    <script src="../common/stringUtils.js"></script>
     <script src="dashboard.js"></script>
 
 </head>
 <body>
 <div class="container-fluid">
     <nav class="navbar navbar-light bg-light" id="welcome-header">
-        <span><strong>Welcome!</strong> <span id="user-name-placeholder"></span> hope you are enjoying our system!</span>
+        <span><strong>Welcome! <span id="user-name-placeholder"></span></strong> hope you are enjoying our system!</span>
     </nav>
     <nav class="navbar navbar-light bg-light border border-dark owner-only" id="xml-header">
-        <form id="uploadFile">
-            <div class="form-group">
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group row">
                 <label for="ChooseFile">Please choose the xml file you would like to upload</label>
-                <input type="file" class="form-control-file" id="ChooseFile" accept=".xml">
+                <input type="file" class="form-control-file col-sm-8" id="ChooseFile" accept=".xml">
+                <input type="submit" class="form-control btn btn-outline-dark col-sm-4" id="fileUploadSubmit" value="Upload file!" disabled>
             </div>
         </form>
     </nav>
@@ -51,19 +53,19 @@
     </div>
     <div class="row">
         <div class="col-sm-4 border border-dark">
-            <h4>The amount of money in your account: <span id="moneyPlaceHolder"></span></h4>
+            <h5>The amount of money in your account: <span id="moneyPlaceHolder"></span></h5>
         </div>
 
         <div class="col-sm-8 border border-info customer-only">
+            <h5>How much do you want to deposit?</h5>
             <form id="deposit-form"><div class="form-group row">
-                <h5>How much do you want to deposit?</h5>
                 <div class="col-sm-2">
                     <input type="text" value="0" class="form-control" name="depositAmount" alt="deposit amount" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-6">
                     <input type="date" class="form-control" name="date" id="date-input">
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     <input type="submit" alt="deposit" class="form-control btn btn-outline-primary" value="deposit">
                 </div>
             </div>
@@ -80,9 +82,9 @@
         <table id="transactions-table" class="table table-hover col-sm-12">
             <thead>
             <tr>
-                <th>Type</th>
+                <th>Type of transaction</th>
                 <th>Date</th>
-                <th>Amount</th>
+                <th>Amount of transaction</th>
                 <th>Balance before</th>
                 <th>Balance after</th>
             </tr>
