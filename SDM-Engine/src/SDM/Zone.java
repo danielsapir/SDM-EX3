@@ -22,7 +22,7 @@ public class Zone
     private Map<Integer, Store> allStores = new HashMap<>();
     private Map<Integer, Item> allItems = new HashMap<>();
     //private Map<Integer, Customer> allCustomers = new HashMap<>();
-    //private List<Order> allOrders;
+    private List<Order> allOrders;
     //private boolean xmlFileLoaded = false;
     private Order currentOrder;
     private Map<Integer, StoreItem> allStoreItemsWithPriceForSpecificStore = new HashMap<>(); //private Map for storeItems to show to UI
@@ -58,9 +58,7 @@ public class Zone
         return (new ArrayList<>(allCustomers.values()));
     }
 
-      public List<Order> getAllOrders() {
-        return allOrders;
-    }
+
 
     public boolean isXMLFileLoaded() {
         return xmlFileLoaded;
@@ -161,7 +159,12 @@ public class Zone
     }
 
 
-    /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ORDER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ORDER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+    public List<Order> getAllOrders() {
+        return allOrders;
+    }
 
     public void createNewDynamicOrder(Customer customerEX1, Date dateOrder) {
         currentOrder = Order.makeNewOrder(customerEX1, dateOrder, null, OrderType.DYNAMIC_ORDER);
@@ -218,7 +221,7 @@ public class Zone
     public void cancelCurrentOrder() {
         currentOrder = null;
     }
-    */
+
 
     private int getPriceOfItemInThisStoreORZero(int itemId, Store store) {
         int resPrice = 0;
@@ -280,6 +283,21 @@ public class Zone
         }
     }
 
+    public double orderPriceAvg()
+    {
+        double avgPrice=0;
+        for (Order order:this.allOrders)
+        {
+            avgPrice+=order.totalPrice;
+        }
+
+        if(this.allOrders.size()>0)
+        {
+            avgPrice = avgPrice / this.allOrders.size();
+        }
+
+        return avgPrice;
+    }
 }
 
 

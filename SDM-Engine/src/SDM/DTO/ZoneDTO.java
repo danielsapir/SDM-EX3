@@ -20,7 +20,7 @@ public class ZoneDTO
        this.zoneName=zone.getName();
        this.itemsNumber=zone.getAllItems().size();
        this.storesNumber=zone.getAllStores().size();
-       //this.ordersNumber=zone.order
-
+       this.ordersNumber=zone.getAllOrders().size();
+       this.orderPriceAvg=zone.orderPriceAvg();
     }
 }
