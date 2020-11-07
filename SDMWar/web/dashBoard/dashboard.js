@@ -13,7 +13,6 @@ $(function () {
         success: function (user) {
             $("#user-name-placeholder").text(user.userName);
             userType = user.userType;
-            userType = user.userType;
             if(user.userType === "OWNER") {
                 $(".customer-only").addClass("invisible");
             }
@@ -36,7 +35,7 @@ function allUserUpdate() {
         success: function (users) {
             $("#usersPlaceHolder").empty();
             $.each(users || [], function (index, user) {
-                $("#usersPlaceHolder").append("<li><ul><li>" + user.name + "</li><li>" + user.type + "</li></ul></li>");
+                $("#usersPlaceHolder").append("<li><ul><li>" + user.userName + "</li><li>" + capitalFirst(user.userType, true) + "</li></ul></li>");
             })
         }
     })
@@ -127,7 +126,7 @@ function updateTransactions() {
 
             $.each(transactions || [], function (index, transaction) {
                 transactionsTableBody.append("<tr>" +
-                    "<td>" + transaction.type +  "</td>" +
+                    "<td>" + capitalFirst(decamelize(transaction.type, " "), true) +  "</td>" +
                     "<td>" + transaction.date + "</td>" +
                     "<td>" + transaction.amountOfAction + "</td>" +
                     "<td>" + transaction.amountBeforeOperation + "</td>" +
@@ -174,4 +173,41 @@ $(function () {
     dateStr += date.getDate();
 
     $("#date-input").val(dateStr);
+})
+
+$(function() {
+    $("input:file").change(function (){
+        var fileName = $(this).val();
+        if(fileName !== undefined && fileName !== null) {
+            $("#fileUploadSubmit").removeAttr("disabled");
+        }
+
+    });
+});
+
+//TODO check this code and change it to my code
+$(function() { // onload...do
+    $("#uploadForm").submit(function() {
+
+        var file = this[0].files[0];
+        var formData = new FormData();
+        formData.append("file", file);
+        formData.append("reqtype", "upload-file");
+
+        $.ajax({
+            url: DASHBOARD_URL,
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            error: function(errorMessage) {
+                showModal("Failed!", "The file couldn't be loaded please try again!\nFailure reason: "+ errorMessage);
+            },
+            success: function(res) {
+                showModal("File has been loaded!", "The file had been loaded successfully!");
+            }
+        });
+
+        return false;
+    })
 })

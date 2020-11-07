@@ -44,9 +44,9 @@ public class SDMEngine {
         return allZones.get(zoneName);
     }
 
-
-
-
+    public Map<String, Zone> getAllZones() {
+        return allZones;
+    }
 
     /*
     public List<Customer> getAllCustomers() {
