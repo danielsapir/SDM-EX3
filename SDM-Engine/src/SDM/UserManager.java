@@ -26,7 +26,16 @@ public class UserManager
 
     public void addUser (String userName, User.Type userType)
     {
-        User user = new User(userName,userType);
+        User user;
+        if(userType==User.Type.CUSTOMER)
+        {
+            user = new Customer(userName);
+        }
+        else
+        {
+            user = new Owner(userName);
+        }
+
         users.add(user);
     }
 

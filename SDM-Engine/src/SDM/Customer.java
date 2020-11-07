@@ -9,11 +9,11 @@ public class Customer extends User implements Locatable
     private Map<Integer, Order> historyOrders;
     private Location location;
 
-    public Customer(String name, Location location)
+    public Customer(String name)
     {
         super(name, Type.CUSTOMER);
         this.historyOrders = new HashMap<>();
-        this.location = location;
+
     }
 
 

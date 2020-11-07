@@ -79,9 +79,11 @@ public class OneStoreOrder extends Order {
 
         if(!partOfDynamicOrder) {
             customer.addNewOrder(this);
+            //להוסיף לבעל החנות את  הנוטיפיקישן
         }
 
         storeOrderMadeFrom.getOrders().add(this);
+        //להוסיף לבעל החנות את  הנוטיפיקישן
     }
 
     @Override

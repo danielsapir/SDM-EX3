@@ -5,7 +5,7 @@ import java.util.Date;
 public class Transaction
 {
 
-    enum Type
+    public enum Type
     {
         LoadingMoney,ReceivePayment,TransferPayment;
     }
@@ -25,5 +25,23 @@ public class Transaction
         this.amountAfterOperation=amountAfterAction;
     }
 
+    public Type getType() {
+        return type;
+    }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public double getAmountOfAction() {
+        return amountOfAction;
+    }
+
+    public double getAmountBeforeOperation() {
+        return amountBeforeOperation;
+    }
+
+    public double getAmountAfterOperation() {
+        return amountAfterOperation;
+    }
 }
