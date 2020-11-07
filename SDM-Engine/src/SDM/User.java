@@ -2,6 +2,10 @@ package SDM;
 
 import com.sun.deploy.security.ValidationState;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+
 public class User
 {
     public enum Type
@@ -27,6 +31,7 @@ public class User
     protected String name;
     protected int id;
     protected MoneyAccount moneyAccount;
+    protected PriorityQueue<Notification> notificationsQueue = new PriorityQueue<Notification>();
     private static int  idCounter=0;
 
 
@@ -53,7 +58,27 @@ public class User
         return moneyAccount;
     }
 
-    ///Color c1 = Color.RED;
+    public synchronized void addNotification(Notification notification)
+    {
+        this.notificationsQueue.add(notification);
+    }
+
+
+    public synchronized List getAndRemoveAllNotifications()
+    {
+        List<Notification>notificationsList=new LinkedList<>();
+
+        while(!(this.notificationsQueue.isEmpty()))
+        {
+            notificationsList.add(this.notificationsQueue.poll());
+        }
+
+        return(notificationsList);
+    }
+
+
+
+
 }
 
 
