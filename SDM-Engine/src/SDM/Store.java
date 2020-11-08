@@ -8,18 +8,19 @@ import java.util.Map;
 public class Store implements Locatable
 {
 
+
     private Owner owner;
-
-
-
     private int id;
     private String name;
     private int deliveryPPK;
     private Location location;
     private Map<Integer, StoreItem> itemsThatSellInThisStore=new HashMap<>();
     private List<OneStoreOrder> orders= new LinkedList<>();
-
     private List<Discount> discounts= new LinkedList<>();
+
+    public Owner getOwner() {
+        return owner;
+    }
 
     public List<Discount> getDiscounts() {
         return discounts;
@@ -28,6 +29,7 @@ public class Store implements Locatable
     public void setOwner(Owner owner) {
         this.owner = owner;
     }
+
     public int getId()
     {
         return id;
