@@ -22,11 +22,11 @@ public class SDMEngine {
     private Map<String,Zone> allZones=new HashMap<>();
 
 
-    public void loadXMLToZone(String stPath, Owner owner)
+    public void loadXMLToZone(String fileContent, Owner owner)
             throws DuplicateStoreIDException, DuplicateStoreItemException, LocationIsOutOfBorderException, JAXBException, FileNotFoundException, DuplicateItemException, FileNotEndWithXMLException, TryingToGivePriceOfItemWhichIDNotExistException, TryingToGiveDifferentPricesForSameStoreItemException, ItemNoOneSellException, StoreWithNoItemException, DuplicatedLocationException, DuplicateCustomerIdException, DiscountWithItemNotSoldByStoreException
     {
         XMLHandlerBaseOnSchema xmlHandler = new XMLHandlerBaseOnSchema();
-        Zone zone= xmlHandler.updateZone(stPath);
+        Zone zone= xmlHandler.updateZone(fileContent);
         zone.setOwner(owner);
         zone.getOwner().addStoresToOwner(zone.getAllStoresMap());//מטודה באונר שמוסיפה את החנויות למפ באונר
 

@@ -8,15 +8,11 @@ import SDM.jaxb.schema.generated.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAttribute;
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class XMLHandlerBaseOnSchema {
     private List<Store> stores = null;
@@ -51,9 +47,9 @@ public class XMLHandlerBaseOnSchema {
         return items;
     }
 
-    public Zone updateZone(String stPath) throws FileNotFoundException, JAXBException, FileNotEndWithXMLException, DuplicateItemException, LocationIsOutOfBorderException, DuplicateStoreIDException, DuplicateStoreItemException, TryingToGivePriceOfItemWhichIDNotExistException, TryingToGiveDifferentPricesForSameStoreItemException, DuplicateCustomerIdException, DuplicatedLocationException, DiscountWithItemNotSoldByStoreException, ItemNoOneSellException, StoreWithNoItemException {
+    public Zone updateZone(String fileContent) throws FileNotFoundException, JAXBException, FileNotEndWithXMLException, DuplicateItemException, LocationIsOutOfBorderException, DuplicateStoreIDException, DuplicateStoreItemException, TryingToGivePriceOfItemWhichIDNotExistException, TryingToGiveDifferentPricesForSameStoreItemException, DuplicateCustomerIdException, DuplicatedLocationException, DiscountWithItemNotSoldByStoreException, ItemNoOneSellException, StoreWithNoItemException {
 
-        SuperDuperMarketDescriptor sdmDescriptor = this.fromStringPathToDescriptor(stPath);
+        SuperDuperMarketDescriptor sdmDescriptor = this.fromFileToDescriptor(fileContent);
 
         parseFromSDMItemToItem(sdmDescriptor);
         parseFromSDMStoresToStores(sdmDescriptor);
@@ -131,8 +127,8 @@ public class XMLHandlerBaseOnSchema {
          */
     }
 
-    private SuperDuperMarketDescriptor fromStringPathToDescriptor(String inpPath) throws FileNotFoundException, JAXBException, FileNotEndWithXMLException {
-        File inputFile = new File(inpPath);
+    private SuperDuperMarketDescriptor fromFileToDescriptor(String fileInput) throws FileNotFoundException, JAXBException, FileNotEndWithXMLException {
+        /*File inputFile = new File(inpPath);
         if (!inputFile.exists()) {
             throw new FileNotFoundException();
         }
@@ -140,15 +136,15 @@ public class XMLHandlerBaseOnSchema {
         if (inpPath.length() - 4 != (inpPath.toLowerCase().lastIndexOf(".xml"))) {
             throw (new FileNotEndWithXMLException(inpPath.substring(inpPath.length() - 3)));
         }
-
-        InputStream inputStream = new FileInputStream(new File(inpPath));
-        return (deserialize(inputStream));
+        */
+        StringReader stringReader = new StringReader(fileInput);
+        return (deserialize(stringReader));
 
     }
 
     //deserialize from input to SuperDuperMarket
 
-    private SuperDuperMarketDescriptor deserialize(InputStream in) throws JAXBException {
+    private SuperDuperMarketDescriptor deserialize(StringReader in) throws JAXBException {
         String JAXB_XML_PACKAGE_NAME = "SDM.jaxb.schema.generated";
         JAXBContext jc = JAXBContext.newInstance(JAXB_XML_PACKAGE_NAME);
         Unmarshaller u = jc.createUnmarshaller();

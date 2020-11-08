@@ -165,6 +165,24 @@ public class DashboardServlet extends HttpServlet {
         return response;
     }
 
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+
+        UserManager userManager = ServletUtils.getUserManager(getServletContext());
+        String userName = SessionUtils.getUsername(req);
+        User user = userManager.getUserByName(userName);
+
+        String response = null;
+
+        response = handleFileUpload(user, req, resp);
+
+        try(PrintWriter out = resp.getWriter()) {
+            out.println(response);
+            out.flush();
+        }
+    }
+
     private String handleFileUpload(User user, HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
         Collection<Part> parts = req.getParts();

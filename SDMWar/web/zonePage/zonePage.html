@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Super Duper Market</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../bootstrap.min.css">
+    <script src="../jquery-3.5.1.min.js"></script>
+    <script src="../popper.min.js"></script>
+    <script src="../bootstrap.min.js"></script>
+    <script src="../context-path-helper.js"></script>
+    <script src="../common/modalFixer.js"></script>
+    <script src="../common/stringUtils.js"></script>
+    <script src="zonePage.js"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-light bg-light" id="welcome-header">
+        <span><strong>Welcome <span id="user-name-placeholder"></span>!</strong> hope you are enjoying our system!</span>
+        <span><strong>Zone: </strong><span id="zoneName"></span></span>
+        <a href="../dashBoard/dashboard.html">Back to dashboard</a>
+    </nav>
+    <div class="row">
+        <h5 class="col-sm-12">
+            All the items sold in this zone:
+        </h5>
+    </div>
+    <div class="row">
+        <table id="items-table" class="table table-hover col-sm-12">
+            <thead>
+            <tr>
+                <th>Item ID</th>
+                <th>Item name</th>
+                <th>Weight/Quantity</th>
+                <th>Number of stores sold by</th>
+                <th>Average price</th>
+                <th>Total sold</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <h5 class="col-sm-12">
+            All the stores selling in this zone: <small class="text-muted">Click on the store to get information about it items</small>
+        </h5>
+    </div>
+    <div class="row">
+        <table id="stores-table" class="table table-hover col-sm-12">
+            <thead>
+            <tr>
+                <th>Store ID</th>
+                <th>Store name</th>
+                <th>Store owner</th>
+                <th>Location</th>
+                <th>Items sold by store</th>
+                <th>Number of orders</th>
+                <th>Total price of items sold</th>
+                <th>PPK</th>
+                <th>Total price of deliveries</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
