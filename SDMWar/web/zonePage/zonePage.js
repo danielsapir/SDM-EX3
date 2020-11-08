@@ -23,25 +23,24 @@ function updateItemsInfo(){
             reqtype: "all-items"
         },
 
-        //items = [{
+        //items = [{id: 12, name: "Milki", type:"QUANTITY"/"WEIGHT", numOfStoresSellThisItem: 23, avgPrice: 23.5, totalAmountSoldOnAllStores:123.5}...]
         success: function (items) {
             var itemsTableBody = $("#items-table").find("tbody");
             itemsTableBody.empty();
 
             $.each(items || [], function(index, item) {
                 itemsTableBody.append("<tr>" +
-                "<td></td>")
+                "<td>" + item.id + "</td>" +
+                "<td>" + item.name + "</td>" +
+                "<td>" + capitalFirst(item.type) + "</td>" +
+                "<td>" + item.numOfStoresSellThisItem + "</td>" +
+                "<td>" + item.avgPrice + "</td>" +
+                "<td>" + item.totalAmountSoldOnAllStores + "</td>" +
+                "</tr>")
             })
         }
 
-//                transactionsTableBody.append("<tr>" +
-//                     "<td>" + capitalFirst(decamelize(transaction.type, " "), true) +  "</td>" +
-//                     "<td>" + transaction.date + "</td>" +
-//                     "<td>" + transaction.amountOfAction + "</td>" +
-//                     "<td>" + transaction.amountBeforeOperation + "</td>" +
-//                     "<td>" + transaction.amountAfterOperation + "</td>" +
-//                     "</tr>")
-//             });
+
     })
 };
 
@@ -52,23 +51,34 @@ function createStoreItemShowerButton(store) {
                                     addClass("btn").addClass("btn-outline-info");
     showStoreItemsButton.innerText = "Show items";
     showStoreItemsButton.click(function () {
-        var itemsTableHtml = " <div class=\"row\">\n" +
+        var itemsTableHtml = $(" <div class=\"row\">\n" +
             "        <table class=\"table table-hover col-sm-12\">\n" +
             "            <thead>\n" +
             "            <tr>\n" +
             "                <th>Item ID</th>\n" +
             "                <th>Item name</th>\n" +
             "                <th>Weight/Quantity</th>\n" +
-            "                <th>Number of stores sold by</th>\n" +
-            "                <th>Average price</th>\n" +
+            "                <th>Price for unit</th>\n" +
             "                <th>Total sold</th>\n" +
             "            </tr>\n" +
             "            </thead>\n" +
             "            <tbody>\n" +
             "            </tbody>\n" +
             "        </table>\n" +
-            "    </div>"
-        showModal("Items sold by " + store.name, )
+            "    </div>");
+
+        //storeItem = { id: 12, name: "Milki", type: "WEIGHT"/"QUANTITY", pricePerOne: 23, totalAmountSoldInThisStore: 23.4}
+        $.each(store.itemsThatSellInThisStore || [], function (index, storeItem) {
+            itemsTableHtml.find("tbody").append("<tr>" +
+                "<td>" + storeItem.id + "</td>" +
+                "<td>" + storeItem.name + "</td>" +
+                "<td>" + capitalFirst(storeItem.type) + "</td>" +
+                "<td>" + storeItem.pricePerOne + "</td>" +
+                "<td>" + storeItem.totalAmountSoldInThisStore + "</td>" +
+                "</tr>")
+
+        })
+        showModal("Items sold by " + store.name, itemsTableHtml.prop("outerHTML"));
     });
 
     return showStoreItemsButton;
@@ -82,22 +92,23 @@ function updateStoresInfo() {
             reqtype: "all-stores"
         },
 
-        //stores= [{
+        //stores= [{id: 12, name:"Rami-Levi", ownerName:"Moshe", location: {location: {x:12, y:32}}, [StoreItemDTO], numOfOrdersFromThisStore: 12, totalCostOfSoldItems: 32.4,
+                    //ppk: 12, totalCostOfDeliveries:123}...]
         success: function (stores) {
             var storesTableBody = $("#stores-table").find("tbody");
             storesTableBody.empty();
 
             $.each(stores || [], function(index, store) {
                 storesTableBody.append("<tr>" +
-                "<td></td>" + 
-                "<td></td>" +
-                "<td></td>" +
-                "<td></td>" +
-                "<td></td>" +
+                "<td>" + store.id + "</td>" +
+                "<td>" + store.name + "</td>" +
+                "<td>" + store.ownerName + "</td>" +
+                "<td>(" + store.location.location.x + ", " + store.location.location.y + ")</td>" +
                 "<td id='itemsButton'></td>" +
-                "<td></td>" +
-                "<td></td>" +
-                "<td></td>" +
+                "<td>" + store.numOfOrdersFromThisStore + "</td>" +
+                "<td>" + store.totalCostOfSoldItems +"</td>" +
+                "<td>" + store.ppk +"</td>" +
+                "<td>" + store.totalCostOfDeliveries +"</td>" +
                 "</tr>");
                 
                 createStoreItemShowerButton(store).appendTo($("#itemsButton"));
@@ -106,35 +117,11 @@ function updateStoresInfo() {
         }
     })
 }
-// var zoneTableBody = $("#zones-table").find("tbody");
-//             zoneTableBody.empty();
-//
-//             $.each(zones || [], function (index, zone) {
-//                 var newTableRow = $(("<tr data-value='" + zone.zoneName +"'>" +
-//                     "<td>" + zone.owner + "</td>" +
-//                     "<td>" + zone.zoneName + "</td>" +
-//                     "<td>" + zone.itemsNumber + "</td>" +
-//                     "<td>" + zone.storesNumber + "</td>" +
-//                     "<td>" + zone.ordersNumber + "</td>" +
-//                     "<td>" + zone.orderPriceAvg + "</td>" +
-//                     "</tr>"));
-//
-//                 newTableRow.click(function () {
-//                           var rowName = $(this).data('value');
-//
-//                           $.ajax({
-//                               url: DASHBOARD_URL,
-//                               method: "GET",
-//                               data: {
-//                                   reqtype: "to-zone",
-//                                   currentZone: rowName
-//                               },
-//                               success: function (newPageURI) {
-//                                 window.location.assign(window.location.origin + buildUrlWithContextPath(newPageURI));
-//                               }
-//                           })
-//                     }
-//                 );
-//
-//                 zoneTableBody.append(newTableRow);
-//             })
+
+$(setInterval(updateStoresInfo, 1000));
+
+$(function () {
+    $("#orderButton").click(function () {
+        $("#cart").animate({left:($("#orderDiv").width() - $("#orderButton").width() - 200) + "px"});
+    });
+})

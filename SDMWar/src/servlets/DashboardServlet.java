@@ -46,7 +46,6 @@ public class DashboardServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
         String reqType = req.getParameter(Constants.REQTYPE);
         String userName = SessionUtils.getUsername(req);
@@ -98,7 +97,7 @@ public class DashboardServlet extends HttpServlet {
 
         req.getSession(true).setAttribute(Constants.CURRENT_ZONE, currentZone);
 
-        return "zoneDashBoard";
+        return null;
     }
 
     private String allZoneInfoMaker() {

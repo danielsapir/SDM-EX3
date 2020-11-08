@@ -51,14 +51,14 @@ function updateZonesData() {
             reqtype: "all-zones"
         },
 
-        //zones = [{owner:"menashe", zoneName:"tel-aviv", itemsNumber: 7, storesNumber: 12, ordersNumber: 1, orderPriceAvg: 24.2}...]
+        //zones = [{ownerName:"menashe", zoneName:"tel-aviv", itemsNumber: 7, storesNumber: 12, ordersNumber: 1, orderPriceAvg: 24.2}...]
         success: function (zones) {
             var zoneTableBody = $("#zones-table").find("tbody");
             zoneTableBody.empty();
 
             $.each(zones || [], function (index, zone) {
                 var newTableRow = $(("<tr data-value='" + zone.zoneName +"'>" +
-                    "<td>" + zone.owner + "</td>" +
+                    "<td>" + zone.ownerName + "</td>" +
                     "<td>" + zone.zoneName + "</td>" +
                     "<td>" + zone.itemsNumber + "</td>" +
                     "<td>" + zone.storesNumber + "</td>" +
@@ -76,10 +76,10 @@ function updateZonesData() {
                                   reqtype: "to-zone",
                                   currentZone: rowName
                               },
-                              success: function (newPageURI) {
-                                window.location.assign(window.location.origin + buildUrlWithContextPath(newPageURI));
+                              success: function (response) {
+                                window.location.replace(window.location.origin + buildUrlWithContextPath("zonePage/zonePage.html"));
                               }
-                          })
+                          });
                     }
                 );
 
