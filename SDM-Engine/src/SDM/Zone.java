@@ -22,7 +22,7 @@ public class Zone
     private Map<Integer, Store> allStores = new HashMap<>();
     private Map<Integer, Item> allItems = new HashMap<>();
     //private Map<Integer, Customer> allCustomers = new HashMap<>();
-    private List<Order> allOrders;
+    private List<Order> allOrders = new LinkedList<>();
     //private boolean xmlFileLoaded = false;
     private Order currentOrder;
     private Map<Integer, StoreItem> allStoreItemsWithPriceForSpecificStore = new HashMap<>(); //private Map for storeItems to show to UI

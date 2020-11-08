@@ -7,7 +7,7 @@ import SDM.Zone;
 public class ZoneDTO
 {
 
-    private Owner owner;
+    private String ownerName;
     private String zoneName;
     private int itemsNumber;
     private int storesNumber;
@@ -16,7 +16,7 @@ public class ZoneDTO
 
     public ZoneDTO(Zone zone)
     {
-       this.owner=zone.getOwner();
+       this.ownerName=zone.getOwner().getName();
        this.zoneName=zone.getName();
        this.itemsNumber=zone.getAllItems().size();
        this.storesNumber=zone.getAllStores().size();

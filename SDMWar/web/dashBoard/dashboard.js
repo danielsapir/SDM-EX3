@@ -14,10 +14,10 @@ $(function () {
             $("#user-name-placeholder").text(user.userName);
             userType = user.userType;
             if(user.userType === "OWNER") {
-                $(".customer-only").addClass("invisible");
+                $(".customer-only").remove();
             }
             else {
-                $(".owner-only").addClass("invisible");
+                $(".owner-only").remove();
             }
         }
     })
@@ -71,13 +71,13 @@ function updateZonesData() {
 
                           $.ajax({
                               url: DASHBOARD_URL,
-                              url: "GET",
+                              method: "GET",
                               data: {
                                   reqtype: "to-zone",
                                   currentZone: rowName
                               },
                               success: function (newPageURI) {
-                                window.location.assign(window.location.hostname + buildUrlWithContextPath(newPageURI));
+                                window.location.assign(window.location.origin + buildUrlWithContextPath(newPageURI));
                               }
                           })
                     }
@@ -185,18 +185,16 @@ $(function() {
     });
 });
 
-//TODO check this code and change it to my code
 $(function() { // onload...do
     $("#uploadForm").submit(function() {
 
         var file = this[0].files[0];
         var formData = new FormData();
         formData.append("file", file);
-        formData.append("reqtype", "upload-file");
 
         $.ajax({
             url: DASHBOARD_URL,
-            method: "POST",
+            method: "PUT",
             data: formData,
             processData: false,
             contentType: false,
