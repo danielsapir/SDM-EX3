@@ -29,15 +29,9 @@ public class SDMEngine {
         Zone zone= xmlHandler.updateZone(fileContent);
         zone.setOwner(owner);
         zone.getOwner().addStoresToOwner(zone.getAllStoresMap());//מטודה באונר שמוסיפה את החנויות למפ באונר
+        zone.addOwnerToAllStores(owner);
 
         allZones.put(zone.getName(), zone);
-
-        /*
-        ////אין לי מושג כרגע איפה זה אמור להיות ולא אכפת לי////
-        for (Store st : xmlHandler.getStores()) {
-            this.allStores.put(st.getId(), st);
-        }
-         */
     }
 
     public Zone getZoneByName(String zoneName) {
