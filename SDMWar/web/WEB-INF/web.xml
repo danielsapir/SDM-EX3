@@ -11,6 +11,10 @@
         <servlet-name>DashboardServlet</servlet-name>
         <servlet-class>servlets.DashboardServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ZonePageServlet</servlet-name>
+        <servlet-class>servlets.ZonePageServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -18,5 +22,9 @@
     <servlet-mapping>
         <servlet-name>DashboardServlet</servlet-name>
         <url-pattern>/dashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ZonePageServlet</servlet-name>
+        <url-pattern>/zonepage</url-pattern>
     </servlet-mapping>
 </web-app>
