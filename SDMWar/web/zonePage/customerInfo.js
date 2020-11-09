@@ -2,7 +2,7 @@ var CUSTOMER_ZONE_INFO_URL = buildUrlWithContextPath("customerzoneinfo");
 
 $(function () {
     $("#orderButton").click(function () {
-        $("#cart").animate({left:($("#orderDiv").width() - $("#orderButton").width() - 200) + "px"});
+        $("#cart").animate({left:($("#orderDiv").width() - $("#orderButton").width() - $("#cart").width()-20) + "px"});
     });
 })
 
@@ -19,7 +19,9 @@ function updateOrdersInfo() {
             ordersTableBody.empty();
 
             //order = {id: 12, date:"12, nov..", orderDestination: {location :{x:12, y:23}}, numOfStoresInThisOrder:12, numOfItemsInThisOrder:43,
-            //            priceOfAllItemsInThisOrder: 32.4, priceOfAllDeliveriesInThisOrder: 43.5, totalPrice: 75.9}
+            //            priceOfAllItemsInThisOrder: 32.4, priceOfAllDeliveriesInThisOrder: 43.5, totalPrice: 75.9,
+            //            itemsInThisOrder: [{id: 12, name:"Banana", type: "WEIGHT"/"QUANTITY", storeName: "Hazi-Hinam", storeId: 32,
+            //                                  amount: 23.4, pricePerOne: 23, isPartOfDiscount: true/false}...]
             $.each(orders || [], function(index, order) {
                 let customerOrderRow = $("<tr>" +
                     "<td>" + order.id + "</td>" +
@@ -52,21 +54,24 @@ function updateOrdersInfo() {
                         "        </table>\n" +
                         "    </div>");
 
-                    //TODO orderItem = {...}
+                    //orderItem = {id: 12, name:"Banana", type: "WEIGHT"/"QUANTITY", storeName: "Hazi-Hinam", storeId: 32,
+                    //              amount: 23.4, pricePerOne: 23, isPartOfDiscount: true/false}
                     $.each(order.itemsThatSellInThisStore || [], function (index, orderItem) {
                         orderItemsTableHtml.find("tbody").append("<tr>" +
                             "<td>" + orderItem.id + "</td>" +
                             "<td>" + orderItem.name + "</td>" +
                             "<td>" + capitalFirst(orderItem.type, true) + "</td>" +
-                            "<td>" + orderItem.name + "</td>" +
-                            "<td>" + storeItem.pricePerOne + "</td>" +
-                            "<td>" + storeItem.totalAmountSoldInThisStore + "</td>" +
+                            "<td>" + orderItem.amount + "-" + orderItem.storeName + "</td>" +
+                            "<td>" + orderItem.pricePerOne + "</td>" +
+                            "<td>" + (orderItem.pricePerOne*orderItem.amount) + "</td>" +
+                            "<td>" + (orderItem.isPartOfDiscount ? "Yes :)" : "No :(") + "</td>" +
                             "</tr>")
 
                     })
                     showModal("Items in order:", orderItemsTableHtml.prop("outerHTML"));
                 });
 
+                ordersTableBody.append(customerOrderRow);
             })
         }
     })
