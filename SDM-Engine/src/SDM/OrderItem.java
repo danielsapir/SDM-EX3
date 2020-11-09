@@ -19,6 +19,7 @@ public class OrderItem {
         this.pricePaid = pricePaid;
     }
 
+
     public double getPricePaid() {
         return pricePaid;
     }
