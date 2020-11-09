@@ -5,14 +5,14 @@ import SDM.OrderItem;
 
 public class OrderItemDTO
 {
-    int id;
-    String name;
-    Item.ItemType type;
-    String storeName;
-    int storeId;
-    double amount;
-    double pricePerOne;
-    boolean isPartOfDiscount;
+    private int id;
+    private String name;
+    private Item.ItemType type;
+    private String storeName;
+    private int storeId;
+    private double amount;
+    private double pricePerOne;
+    private boolean isPartOfDiscount;
 
 
     public OrderItemDTO(OrderItem orderItem)
