@@ -1,4 +1,28 @@
 var ZONE_PAGE_URL = buildUrlWithContextPath("zonepage");
+var DASHBOARD_URL = buildUrlWithContextPath("dashboard");
+var userType;
+
+$(function () {
+    $.ajax({
+        url: DASHBOARD_URL,
+        method: "GET",
+        data: {
+            reqtype: "user-info"
+        },
+
+        //user = {userName:"moshe", userType:"OWNER/CUSTOMER",...}
+        success: function (user) {
+            $("#user-name-placeholder").text(user.userName);
+            userType = user.userType;
+            if(user.userType === "OWNER") {
+                $(".customer-only").remove();
+            }
+            else {
+                $(".owner-only").remove();
+            }
+        }
+    })
+})
 
 $(function () {
     $.ajax({
@@ -10,7 +34,7 @@ $(function () {
 
         //currentZone = {ownerName: "Moshe", zoneName: "Tel-Aviv", itemNumber: 7, storesNumber: 12, ordersNumber: 32, orderPriceAvg: 23.53
         success: function (currentZone) {
-            $("#zoneName").innerText = response.zoneName;
+            $("#zoneName").text(currentZone.zoneName);
         }
     })
 })
@@ -32,7 +56,7 @@ function updateItemsInfo(){
                 itemsTableBody.append("<tr>" +
                 "<td>" + item.id + "</td>" +
                 "<td>" + item.name + "</td>" +
-                "<td>" + capitalFirst(item.type) + "</td>" +
+                "<td>" + capitalFirst(item.type, true) + "</td>" +
                 "<td>" + item.numOfStoresSellThisItem + "</td>" +
                 "<td>" + item.avgPrice + "</td>" +
                 "<td>" + item.totalAmountSoldOnAllStores + "</td>" +
@@ -47,7 +71,7 @@ function updateItemsInfo(){
 $(setInterval(updateItemsInfo, 1000));
 
 function createStoreItemShowerButton(store) {
-    var showStoreItemsButton = $("<button></button>").attr("type", "button").
+    var showStoreItemsButton = $("<button>Click here to see items</button>").attr("type", "button").
                                     addClass("btn").addClass("btn-outline-info");
     showStoreItemsButton.innerText = "Show items";
     showStoreItemsButton.click(function () {
@@ -72,7 +96,7 @@ function createStoreItemShowerButton(store) {
             itemsTableHtml.find("tbody").append("<tr>" +
                 "<td>" + storeItem.id + "</td>" +
                 "<td>" + storeItem.name + "</td>" +
-                "<td>" + capitalFirst(storeItem.type) + "</td>" +
+                "<td>" + capitalFirst(storeItem.type, true) + "</td>" +
                 "<td>" + storeItem.pricePerOne + "</td>" +
                 "<td>" + storeItem.totalAmountSoldInThisStore + "</td>" +
                 "</tr>")
@@ -104,14 +128,14 @@ function updateStoresInfo() {
                 "<td>" + store.name + "</td>" +
                 "<td>" + store.ownerName + "</td>" +
                 "<td>(" + store.location.location.x + ", " + store.location.location.y + ")</td>" +
-                "<td id='itemsButton'></td>" +
+                "<td id='itemsButton" + index + "'></td>" +
                 "<td>" + store.numOfOrdersFromThisStore + "</td>" +
                 "<td>" + store.totalCostOfSoldItems +"</td>" +
                 "<td>" + store.ppk +"</td>" +
                 "<td>" + store.totalCostOfDeliveries +"</td>" +
                 "</tr>");
                 
-                createStoreItemShowerButton(store).appendTo($("#itemsButton"));
+                createStoreItemShowerButton(store).appendTo($("#itemsButton" + index));
 
             })
         }
@@ -121,7 +145,12 @@ function updateStoresInfo() {
 $(setInterval(updateStoresInfo, 1000));
 
 $(function () {
-    $("#orderButton").click(function () {
-        $("#cart").animate({left:($("#orderDiv").width() - $("#orderButton").width() - 200) + "px"});
+    var SCRIPT_URL = buildUrlWithContextPath(userType === "OWNER" ? "ownerInfo.js" : "customerInfo.js");
+
+    $.ajax({
+       url: SCRIPT_URL,
+       dataType: "script",
+       success: success
     });
+
 })

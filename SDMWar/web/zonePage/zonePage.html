@@ -13,6 +13,7 @@
     <script src="../common/modalFixer.js"></script>
     <script src="../common/stringUtils.js"></script>
     <script src="zonePage.js"></script>
+    <script src="customerInfo.js"></script>
 
 </head>
 <body>
@@ -67,13 +68,35 @@
             </tbody>
         </table>
     </div>
-    <div class="row border border-primary" id="orderDiv">
+    <div class="row border border-primary customer-only" id="orderDiv">
         <div class="d-inline-block" >
             <button class="button btn-outline-primary" id="orderButton">Start a new order!</button>
             <img id="cart" class="img-responsive" src="../cart.png">
         </div>
     </div>
-
+    <div class="row customer-only">
+        <h5 class="col-sm-12">
+            All the orders you made in this zone: <small class="text-muted">Click on the order to get information about it items</small>
+        </h5>
+    </div>
+    <div class="row">
+        <table id="customer-orders-table" class="table table-hover col-sm-12 customer-only">
+            <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date made</th>
+                <th>Destination location</th>
+                <th>Number of stores order made from</th>
+                <th>Total number of items in order</th>
+                <th>Total price of items</th>
+                <th>Delivery price</th>
+                <th>Total price</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 </body>
