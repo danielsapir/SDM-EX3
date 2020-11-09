@@ -24,10 +24,16 @@ public class Zone
     //private Map<Integer, Customer> allCustomers = new HashMap<>();
     private List<Order> allOrders = new LinkedList<>();
     //private boolean xmlFileLoaded = false;
-    private Order currentOrder;
+    //private Order currentOrder;
     private Map<Integer, StoreItem> allStoreItemsWithPriceForSpecificStore = new HashMap<>(); //private Map for storeItems to show to UI
-    private SimpleBooleanProperty anyOrderMade = new SimpleBooleanProperty(false);
+    //private SimpleBooleanProperty anyOrderMade = new SimpleBooleanProperty(false);
 
+
+
+    public void addOrder(Order order)
+    {
+        allOrders.add(order);
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -80,10 +86,12 @@ public class Zone
     }
 
 
-
+/*
     public Order getCurrentOrder() {
         return currentOrder;
     }
+
+ */
 
     public List<StoreItem> getAllStoreItemsWithPriceForSpecificStore() {
         return new ArrayList<>(allStoreItemsWithPriceForSpecificStore.values());
@@ -166,32 +174,8 @@ public class Zone
         return allOrders;
     }
 
-    public void createNewDynamicOrder(Customer customerEX1, Date dateOrder) {
-        currentOrder = Order.makeNewOrder(customerEX1, dateOrder, null, OrderType.DYNAMIC_ORDER);
-    }
 
-    public void createNewOneStoreOrder(Customer customerEX1, Date dateOrder, Store store) {
-        currentOrder = Order.makeNewOrder(customerEX1, dateOrder, store, OrderType.ONE_STORE_ORDER);
-    }
-
-    public void addItemToCurrentOrder(int choosedItemId, double choosedAmountOfItem) throws NegativeAmountOfItemInException
-    {
-        this.currentOrder.addItemToOrder(allItems.get(choosedItemId),choosedAmountOfItem);
-    }
-
-
-    public void continueCurrentOrderToDiscounts() throws NegativeAmountOfItemInException {
-        currentOrder.continueToDiscounts();
-    }
-
-    public List<OneStoreOrder> getListOfOneStoreOrdersOfCurrentOrder() {
-        return currentOrder.getListOfOneStoreOrders();
-    }
-
-    public List<Discount> getListOfDiscountsOfCurrentOrder() {
-        return currentOrder.getDiscountsAvailable();
-    }
-
+/*
     public boolean isAnyOrderMade() {
         return anyOrderMade.get();
     }
@@ -200,27 +184,8 @@ public class Zone
         return anyOrderMade;
     }
 
-    public boolean useDiscountOfCurrentOrder(Discount discountToUse) throws NegativeAmountOfItemInException {
-        return currentOrder.useDiscount(discountToUse, null);
-    }
+ */
 
-    public boolean useDiscountOfCurrentOrder(Discount discountToUse, Offer offerChosen) throws NegativeAmountOfItemInException {
-        return currentOrder.useDiscount(discountToUse, offerChosen);
-    }
-
-    public void completeCurrentOrder() throws NegativeAmountOfItemInException {
-        currentOrder.completeOrder();
-        allOrders.add(currentOrder);
-        currentOrder = null;
-
-        if(!anyOrderMade.get()) {
-            anyOrderMade.set(true);
-        }
-    }
-
-    public void cancelCurrentOrder() {
-        currentOrder = null;
-    }
 
 
     private int getPriceOfItemInThisStoreORZero(int itemId, Store store) {
