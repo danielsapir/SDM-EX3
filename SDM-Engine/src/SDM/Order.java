@@ -29,6 +29,15 @@ public abstract class Order
         discountsAvailable = new LinkedList<>();
     }
 
+
+    public Location getDestinationLocation() {
+        return destinationLocation;
+    }
+
+    public void setDestinationLocation(Location destinationLocation) {
+        this.destinationLocation = destinationLocation;
+    }
+
     //Might be better in an order factory class
     public static Order makeNewOrder(Customer customer, Date date, Store storeOrderMadeFrom, OrderType orderType, Location destinationLocation) {
         if(orderType == OrderType.ONE_STORE_ORDER) {

@@ -98,7 +98,7 @@ public class OneStoreOrder extends Order {
         });
 
         if(!partOfDynamicOrder) {
-            customer.addNewOrder(this);
+            customer.addOrder(this);
 
         }
 
@@ -109,6 +109,10 @@ public class OneStoreOrder extends Order {
     void addNewFeedBack(int rate,String description)
     {
         this.feedBack=new FeedBack(this.customer.name, this.date,rate,description);
+
+        //notification to store owner about new feedBack
+        Notification notification=new Notification(Notification.Type.Feedback, "your store get feedBacK from Customer");
+        this.storeOrderMadeFrom.getOwner().addNotification(notification);
     }
 
 
@@ -122,7 +126,7 @@ public class OneStoreOrder extends Order {
     }
 
     public double distanceBetweenCostumerAndStore() {
-        return Location.distanceBetweenLocations(customer.getLocation(), storeOrderMadeFrom.getLocation());
+        return Location.distanceBetweenLocations(this.destinationLocation, storeOrderMadeFrom.getLocation());
     }
 
     @Override

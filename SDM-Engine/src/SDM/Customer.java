@@ -5,11 +5,11 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.*;
 
-public class Customer extends User implements Locatable
+public class Customer extends User //implements Locatable
 {
 
     private Map<Integer, Order> historyOrders;
-    private Location location;
+    //private Location location;
 
     //noy 9/11
     private Order currentOrder;
@@ -28,10 +28,11 @@ public class Customer extends User implements Locatable
         return new LinkedList<>(historyOrders.values());
     }
 
-    public void addNewOrder(Order newOrder) {
+    public void addOrder(Order newOrder) {
         historyOrders.put(newOrder.getId(), newOrder);
     }
 
+    /*
     @Override
     public Location getLocation() {
         return location;
@@ -41,6 +42,8 @@ public class Customer extends User implements Locatable
     public void setLocation(Location location) {
         this.location = location;
     }
+
+     */
 
     public int getNumOfCostumerOrders() {
         return historyOrders.size();
