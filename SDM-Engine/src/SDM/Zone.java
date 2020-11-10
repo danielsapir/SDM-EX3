@@ -1,16 +1,8 @@
 package SDM;
 
 import SDM.Exception.*;
-import SDM.jaxb.schema.XMLHandlerBaseOnSchema;
-import com.sun.org.apache.xml.internal.security.keys.storage.StorageResolverSpi;
-import javafx.beans.property.SimpleBooleanProperty;
 
-import javax.xml.bind.JAXBException;
-import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.function.Consumer;
-
-
 
 
 public class Zone
@@ -152,8 +144,8 @@ public class Zone
 
     }
 
-    public void updateAllStoreItemsForSaleInCurrentStoreOrder(Store store) {
-        allStoreItemsWithPriceForSpecificStore = new HashMap<>();
+    public Map<Integer, StoreItem> getAllStoreItemsForSaleInCurrentStoreForOrder(Store store) {
+        Map<Integer, StoreItem> allStoreItemsWithPriceForSpecificStore = new HashMap<>();
 
         for (Item item : allItems.values()) {
             StoreItem storeItem = new StoreItem();
@@ -164,6 +156,8 @@ public class Zone
             storeItem.setPrice(priceOfItem);
             allStoreItemsWithPriceForSpecificStore.put(item.getId(), storeItem);
         }
+
+        return allStoreItemsWithPriceForSpecificStore;
     }
 
 

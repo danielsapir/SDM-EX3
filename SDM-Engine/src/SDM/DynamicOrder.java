@@ -21,8 +21,8 @@ public class DynamicOrder extends Order{
     private Map<Integer, OneStoreOrder> innerOneStoreOrderMap = new HashMap<>();
     private List<DynamicOrderItem> itemsInCart = new LinkedList<>();
 
-    public DynamicOrder(Customer customer, Date date) {
-        super(customer, date);
+    public DynamicOrder(Customer customer, Date date, Location destinationLocation) {
+        super(customer, date, destinationLocation);
     }
 
     public Map<Integer, OneStoreOrder> getInnerOneStoreOrderMap() {
@@ -60,7 +60,7 @@ public class DynamicOrder extends Order{
         for (DynamicOrderItem dynamicOrderItem : itemsInCart) {
             Store cheapestStore = getCheapestSellerOfItem(dynamicOrderItem);
             if(!innerOneStoreOrderMap.containsKey(cheapestStore.getId())) {
-                innerOneStoreOrderMap.put(cheapestStore.getId(), new OneStoreOrder(customer, date, cheapestStore));
+                innerOneStoreOrderMap.put(cheapestStore.getId(), new OneStoreOrder(customer, date, cheapestStore, destinationLocation));
                 innerOneStoreOrderMap.get(cheapestStore.getId()).setPartOfDynamicOrder(true);
                 innerOneStoreOrderMap.get(cheapestStore.getId()).setDynamicOrder(this);
             }

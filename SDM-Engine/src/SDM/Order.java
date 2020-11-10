@@ -16,23 +16,26 @@ public abstract class Order
     protected double deliveryPrice;
     protected double priceOfAllItems;
     protected double totalPrice;
+    protected Location destinationLocation;
 
-    public Order(Customer customer, Date date) {
+
+    public Order(Customer customer, Date date, Location destinationLocation) {
         this.customer = customer;
         this.date = date;
         this.id = idCounter;
+        this.destinationLocation = destinationLocation;
         orderItemCart = new HashMap<>();
         itemsBoughtWithDiscount = new HashMap<>();
         discountsAvailable = new LinkedList<>();
     }
 
     //Might be better in an order factory class
-    public static Order makeNewOrder(Customer customer, Date date, Store storeOrderMadeFrom, OrderType orderType) {
+    public static Order makeNewOrder(Customer customer, Date date, Store storeOrderMadeFrom, OrderType orderType, Location destinationLocation) {
         if(orderType == OrderType.ONE_STORE_ORDER) {
-            return new OneStoreOrder(customer, date, storeOrderMadeFrom);
+            return new OneStoreOrder(customer, date, storeOrderMadeFrom, destinationLocation);
         }
         else if (orderType == OrderType.DYNAMIC_ORDER) {
-            return new DynamicOrder(customer, date);
+            return new DynamicOrder(customer, date, destinationLocation);
         }
         else {
             return null;

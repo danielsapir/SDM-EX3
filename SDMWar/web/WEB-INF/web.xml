@@ -15,6 +15,10 @@
         <servlet-name>ZonePageServlet</servlet-name>
         <servlet-class>servlets.ZonePageServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CustomerZoneInfoServlet</servlet-name>
+        <servlet-class>servlets.CustomerZoneInfoServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -26,5 +30,9 @@
     <servlet-mapping>
         <servlet-name>ZonePageServlet</servlet-name>
         <url-pattern>/zonepage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerZoneInfoServlet</servlet-name>
+        <url-pattern>/customerzoneinfo</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -3,10 +3,7 @@ package SDM;
 import SDM.Exception.NegativeAmountOfItemInException;
 import javafx.beans.property.SimpleBooleanProperty;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Customer extends User implements Locatable
 {
@@ -27,10 +24,9 @@ public class Customer extends User implements Locatable
 
     }
 
-
-
-
-
+    public List<Order> getAllOrders() {
+        return new LinkedList<>(historyOrders.values());
+    }
 
     public void addNewOrder(Order newOrder) {
         historyOrders.put(newOrder.getId(), newOrder);
@@ -79,13 +75,13 @@ public class Customer extends User implements Locatable
     }
 
 
-    public void createNewDynamicOrder(Customer customerEX1, Date dateOrder,Zone zone) {
-
+    public void createNewDynamicOrder(Customer customerEX1, Date dateOrder,Zone zone, Location destinationLocation) {
+        currentOrder = Order.makeNewOrder(customerEX1, dateOrder, null, OrderType.DYNAMIC_ORDER, destinationLocation);
         currentOrderZone=zone;
     }
 
-    public void createNewOneStoreOrder(Customer customerEX1, Date dateOrder, Store store,Zone zone) {
-        currentOrder = Order.makeNewOrder(customerEX1, dateOrder, store, OrderType.ONE_STORE_ORDER);
+    public void createNewOneStoreOrder(Customer customerEX1, Date dateOrder, Store store,Zone zone, Location destinationLocation) {
+        currentOrder = Order.makeNewOrder(customerEX1, dateOrder, store, OrderType.ONE_STORE_ORDER, destinationLocation);
         currentOrderZone=zone;
     }
 
