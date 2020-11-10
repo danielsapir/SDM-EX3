@@ -1,0 +1,73 @@
+<div class="container">
+    <div id="order-carousel" class="carousel slide" data-ride="carousel">
+
+        <!-- The slideshow -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <form id="firstStageForm">
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <h5>Where do we need to deliver?</h5>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label for="xCorPicker">X:</label>
+                            <input class="form-control" type="number" value="1" min="1" max="50" name="xCor" id="xCorPicker" onkeydown="return false">
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label for="xCorPicker">Y:</label>
+                            <input class="form-control" type="number" value="1" min="1" max="50" name="yCor" id="yCorPicker" onkeydown="return false">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <h5>When do we need to deliver?</h5>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <input type="date" class="form-control" name="date" id="date-input-order">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 form-group" id="staticOrderCol">
+                            <label class="form-check-label" for="staticOrderButton">
+                                <input type="radio" class="form-check-input" id="staticOrderButton" name="orderType" value="static" checked>Static order (from one store)
+                            </label>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label class="form-check-label" for="dynamicOrderButton">
+                                <input type="radio" class="form-check-input" id="dynamicOrderButton" name="orderType" value="dynamic">Dynamic order &#128512;
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row static-order">
+                        <div class="col-sm-6 form-group">
+                            <label for="store-chooser">Select store to order from:</label>
+                            <select class="form-control" id="store-chooser" name="storeChoose">
+
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5>Delivery price: <span id="deliveryPriceHolder"></span></h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <button class="form-control btn btn-outline-primary btn-block" id="firstStepBtn">
+                                Click here to continue
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="carousel-item">
+                <form id="itemChoiseForm">
+                    <div class="container" id="itemsContainer">
+
+                    </div>
+                </form>
+            </div>
+            <div class="carousel-item">
+                <h1>1231231231231221</h1>
+            </div>
+        </div>
+    </div>
+</div>

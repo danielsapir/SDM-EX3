@@ -1,8 +1,15 @@
 var CUSTOMER_ZONE_INFO_URL = buildUrlWithContextPath("customerzoneinfo");
-
+var html
 $(function () {
     $("#orderButton").click(function () {
+        $(this).addClass("disabled");
+        $(this).attr("disabled", "disabled");
         $("#cart").animate({left:($("#orderDiv").width() - $("#orderButton").width() - $("#cart").width()-20) + "px"});
+        $.get(buildUrlWithContextPath("zonePage/customerOrder/customerOrder.html"),function(htmlFile) {
+            $("#orderOperationPlaceHolder").html(htmlFile).hide();
+            $("#orderOperationPlaceHolder").show(1000);
+            $.getScript(buildUrlWithContextPath("zonePage/customerOrder/customerOrder.js"));
+        });
     });
 })
 
@@ -78,3 +85,5 @@ function updateOrdersInfo() {
 }
 
 $(setInterval(updateOrdersInfo, 1000));
+
+//# sourceURL=customerInfo.js

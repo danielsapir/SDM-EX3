@@ -1,6 +1,7 @@
 var ZONE_PAGE_URL = buildUrlWithContextPath("zonepage");
 var DASHBOARD_URL = buildUrlWithContextPath("dashboard");
 var userType;
+var fetchedStores;
 
 $(function () {
     $.ajax({
@@ -119,6 +120,7 @@ function updateStoresInfo() {
         //stores= [{id: 12, name:"Rami-Levi", ownerName:"Moshe", location: {location: {x:12, y:32}}, [StoreItemDTO], numOfOrdersFromThisStore: 12, totalCostOfSoldItems: 32.4,
                     //ppk: 12, totalCostOfDeliveries:123}...]
         success: function (stores) {
+            fetchedStores = stores;
             var storesTableBody = $("#stores-table").find("tbody");
             storesTableBody.empty();
 
@@ -144,13 +146,19 @@ function updateStoresInfo() {
 
 $(setInterval(updateStoresInfo, 1000));
 
-$(function () {
-    var SCRIPT_URL = buildUrlWithContextPath(userType === "OWNER" ? "ownerInfo.js" : "customerInfo.js");
+function getScriptsFromServer() {
+    if(userType !== undefined) {
+        $.ajaxSetup({cache: true});
+        if (userType === "OWNER") {
 
-    $.ajax({
-       url: SCRIPT_URL,
-       dataType: "script",
-       success: success
-    });
+        } else {
+            $.getScript(buildUrlWithContextPath("zonePage/customerInfo.js"));
+        }
+        $.ajaxSetup({cache: false});
+    }
+    else {
+        setTimeout(getScriptsFromServer, 200);
+    }
+}
 
-})
+$(getScriptsFromServer());

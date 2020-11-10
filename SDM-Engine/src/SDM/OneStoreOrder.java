@@ -29,8 +29,8 @@ public class OneStoreOrder extends Order {
         this.dynamicOrder = dynamicOrder;
     }
 
-    public OneStoreOrder(Customer customer, Date date, Store storeOrderMadeFrom1) {
-        super(customer, date);
+    public OneStoreOrder(Customer customer, Date date, Store storeOrderMadeFrom1, Location destinationLocation) {
+        super(customer, date, destinationLocation);
         this.storeOrderMadeFrom = storeOrderMadeFrom1;
         calculateDeliveryPrice();
     }

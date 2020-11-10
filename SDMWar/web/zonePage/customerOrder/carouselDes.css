@@ -1,0 +1,12 @@
+div.carousel-inner {
+    padding: 10px;
+    margin: 10px;
+}
+
+#staticOrderCol {
+    left:20px;
+}
+
+.errorText{
+    color : red;
+}
