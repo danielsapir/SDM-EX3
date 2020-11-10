@@ -10,6 +10,8 @@ public class MoneyAccount
     private double amount=0;
     private List<Transaction> transactions =new LinkedList<>();
 
+
+
     public double getAmount() {
         return amount;
     }
@@ -18,6 +20,23 @@ public class MoneyAccount
         return transactions;
     }
 
+    //noy 9/11
+    public void transferPayment(double amountToTransfer, Date date)
+    {
+        Transaction transactionAccountTransferMoney=new Transaction(Transaction.Type.TransferPayment, date,amountToTransfer,amount,amount-amountToTransfer);
+        this.transactions.add(transactionAccountTransferMoney);
+        this.amount -= amountToTransfer;
+    }
+
+    //noy 9/11
+    public void receiveMoney(double amountToReceive,Date date)
+    {
+        Transaction transactionAccountReceiveMoney=new Transaction(Transaction.Type.ReceivePayment, date,amountToReceive,amount,amount+amountToReceive);
+        this.transactions.add(transactionAccountReceiveMoney);
+        this.amount += amountToReceive;
+    }
+
+/*
     public void TransferMoneyToAnotherAccount(double amountToTransfer, MoneyAccount moneyAccount, Date date)
     {
         Transaction transactionAccountTransferMoney=new Transaction(Transaction.Type.TransferPayment, date,amountToTransfer,amount,amount+amountToTransfer);
@@ -28,6 +47,8 @@ public class MoneyAccount
         moneyAccount.transactions.add(transactionAccountReceiveMoney);
         moneyAccount.amount += amountToTransfer;
     }
+
+ */
 
     public void LoadingMoneyInMyAccount(double amountToLoading,Date date)
     {
