@@ -10,6 +10,17 @@ public class OneStoreOrder extends Order {
     private boolean partOfDynamicOrder = false;
     private DynamicOrder dynamicOrder;
 
+    //noy 10/11
+    private FeedBack feedBack;
+
+    public FeedBack getFeedBack() {
+        return feedBack;
+    }
+
+    public void setFeedBack(FeedBack feedBack) {
+        this.feedBack = feedBack;
+    }
+
     public DynamicOrder getDynamicOrder() {
         return dynamicOrder;
     }
@@ -60,6 +71,15 @@ public class OneStoreOrder extends Order {
         incIdCounter();
         priceOfAllItems = calculatePriceOfOrderItems();
         totalPrice = priceOfAllItems + deliveryPrice;
+
+        //noy 9/11
+        //*****************
+        //לאחר שבוצעה הזמנה מוסיפים לבעל החנות את סכום ההזמנה
+        //נוטיפיקיישן לבעל החנות. התקבלה הזמנה חדשה
+        this.storeOrderMadeFrom.getOwner().moneyAccount.receiveMoney(totalPrice,this.date);
+        Notification notification=new Notification(Notification.Type.NewOrder,"A new order has been received ");
+        this.storeOrderMadeFrom.getOwner().addNotification(notification);
+
         orderItemCart.forEach((orderItemID, orderItem) -> {
             try {
                 orderItem.updateItemAmountSold();
@@ -79,12 +99,20 @@ public class OneStoreOrder extends Order {
 
         if(!partOfDynamicOrder) {
             customer.addNewOrder(this);
-            //להוסיף לבעל החנות את  הנוטיפיקישן
+
         }
 
         storeOrderMadeFrom.getOrders().add(this);
-        //להוסיף לבעל החנות את  הנוטיפיקישן
+
     }
+
+    void addNewFeedBack(int rate,String description)
+    {
+        this.feedBack=new FeedBack(this.customer.name, this.date,rate,description);
+    }
+
+
+
 
     @Override
     protected double calculatePriceOfOrderItems() {
@@ -205,4 +233,7 @@ public class OneStoreOrder extends Order {
             itemsBoughtWithDiscount.put(itemChosen.getItem().getId(), newItemInOrder);
         }
     }
+
+
+
 }

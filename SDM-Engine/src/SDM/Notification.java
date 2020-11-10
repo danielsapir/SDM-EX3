@@ -12,5 +12,9 @@ public class Notification
     private Type type;
     private String message;
 
-
+    public Notification(Type type, String message)
+    {
+        this.type = type;
+        this.message = message;
+    }
 }

@@ -119,13 +119,16 @@ public class Customer extends User implements Locatable
     public void completeCurrentOrder() throws NegativeAmountOfItemInException
     {
         currentOrder.completeOrder();
+        //**********************
+        ///Noy 9/11 transfer money from customer to store owner and notification to store owner
+        //להוריד כסף מהלקוח עבור ההזמנה
+        this.moneyAccount.transferPayment(this.currentOrder.totalPrice,this.currentOrder.getDate());
 
-        //allOrders.add(currentOrder);שינוי נוי 9.11 מזה:
-        historyOrders.put(currentOrder.id,currentOrder);
+        historyOrders.put(currentOrder.id,currentOrder);  //allOrders.add(currentOrder);שינוי נוי 9.11 מ-זה-:
         currentOrderZone.addOrder(currentOrder);
 
-        currentOrder = null;
 
+        currentOrder = null;
     }
 
     public void cancelCurrentOrder() {
