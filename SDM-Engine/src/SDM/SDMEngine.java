@@ -27,12 +27,19 @@ public class SDMEngine {
     {
         XMLHandlerBaseOnSchema xmlHandler = new XMLHandlerBaseOnSchema();
         Zone zone= xmlHandler.updateZone(fileContent);
+
+        //noy 11/11
+        verifyNoDuplicatedZone(zone);
+
+
         zone.setOwner(owner);
         zone.getOwner().addStoresToOwner(zone.getAllStoresMap());//מטודה באונר שמוסיפה את החנויות למפ באונר
         zone.addOwnerToAllStores(owner);
 
         allZones.put(zone.getName(), zone);
     }
+
+
 
     public Zone getZoneByName(String zoneName) {
         return allZones.get(zoneName);
@@ -41,6 +48,33 @@ public class SDMEngine {
     public Map<String, Zone> getAllZones() {
         return allZones;
     }
+
+    //noy 11/11
+    private void verifyNoDuplicatedZone(Zone zone)
+    {
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /*
     public List<Customer> getAllCustomers() {

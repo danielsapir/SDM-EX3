@@ -125,7 +125,8 @@ public class OneStoreOrder extends Order {
         return priceOfAllItems;
     }
 
-    public double distanceBetweenCostumerAndStore() {
+    public double
+     distanceBetweenCostumerAndStore() {
         return Location.distanceBetweenLocations(this.destinationLocation, storeOrderMadeFrom.getLocation());
     }
 

@@ -17,14 +17,18 @@ import java.util.List;
 public class XMLHandlerBaseOnSchema {
     private List<Store> stores = null;
     private Map<Integer, Item> items = null;
-    //private Map<Integer, Customer> costumers = null;
 
+    //noy 11/11
+    ///private Zone ZONE;
+
+
+
+    //private Map<Integer, Customer> costumers = null;
 
     /*
     public Map<Integer, Customer> getCostumers() {
         return costumers;
     }
-
     */
 
     public Map<Integer,Store> getStoresMap()
@@ -70,7 +74,8 @@ public class XMLHandlerBaseOnSchema {
     }
 
     private void verifyEveryStoreSellAtLeastOneItem(Map<Integer, Store> tempAllStores) throws StoreWithNoItemException {
-        for(Store store : tempAllStores.values()) {
+        for(Store store :
+                tempAllStores.values()) {
             if(store.getItemsThatSellInThisStore().size() == 0) {
                 throw new StoreWithNoItemException(store.getId());
             }
@@ -338,37 +343,42 @@ public class XMLHandlerBaseOnSchema {
 
 
 
-
-    /////noy 5/11
-    private void parseFromSDMZoneToZone(SuperDuperMarketDescriptor sdmObj) {
-
-
-
-
-
-
-
-    /*
-    private void parseFromSDMItemToItem(SuperDuperMarketDescriptor sdmObj) throws DuplicateItemException
+/*
+    /////noy 5/1
+    private void parseFromSDMZoneToZone(SuperDuperMarketDescriptor sdmObj)
     {
-        List<SDMItem> sdmItems= sdmObj.getSDMItems().getSDMItem();
-        this.items=new HashMap<>();
-        Item item;
+    }//parseFromSDMZoneToZone
 
-        for (SDMItem sdmItem:sdmItems)
-        {
-            if(this.items.containsKey(sdmItem.getId()))
-            {
-                throw (new DuplicateItemException(sdmItem.getId()));
+ */
+
+
+    //NOY 11/11
+    private void verifyNoDuplicatedZone() throws DuplicatedLocationException
+    {
+
+
+
+        Set<Location> locations = new HashSet<>();
+
+        for (Store store : stores) {
+            if (locations.contains(store.getLocation())) {
+                throw new DuplicatedLocationException(store.getLocation());
+            } else {
+                locations.add(store.getLocation());
             }
-            item=new Item(sdmItem.getId(),sdmItem.getName());
-            item.checkAndUpdateItemType(sdmItem.getPurchaseCategory());
-            this.items.put(item.getId(),item);
         }
     }
 
-     */
-    }//parseFromSDMZoneToZone
+
+
+
+
+
+
+
+
+
+
 
 
 
