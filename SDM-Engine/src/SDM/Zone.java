@@ -10,17 +10,14 @@ public class Zone
 
     private String name;
     private Owner owner;
-
     private Map<Integer, Store> allStores = new HashMap<>();
     private Map<Integer, Item> allItems = new HashMap<>();
-    //private Map<Integer, Customer> allCustomers = new HashMap<>();
     private List<Order> allOrders = new LinkedList<>();
-    //private boolean xmlFileLoaded = false;
-    //private Order currentOrder;
     private Map<Integer, StoreItem> allStoreItemsWithPriceForSpecificStore = new HashMap<>(); //private Map for storeItems to show to UI
     //private SimpleBooleanProperty anyOrderMade = new SimpleBooleanProperty(false);
-
-
+    //private boolean xmlFileLoaded = false;
+    //private Order currentOrder;
+    //private Map<Integer, Customer> allCustomers = new HashMap<>();
 
     public void addOrder(Order order)
     {
@@ -144,17 +141,35 @@ public class Zone
 
     }
 
-    public Map<Integer, StoreItem> getAllStoreItemsForSaleInCurrentStoreForOrder(Store store) {
+    public Map<Integer, StoreItem> getAllStoreItemsForSaleInCurrentStoreForOrder(Store store)
+    {
         Map<Integer, StoreItem> allStoreItemsWithPriceForSpecificStore = new HashMap<>();
 
-        for (Item item : allItems.values()) {
-            StoreItem storeItem = new StoreItem();
-            storeItem.setItem(item);
-            //currentOrder.setStoreOrderMadeFrom(store);
-            storeItem.setStore(store);
-            int priceOfItem = getPriceOfItemInThisStoreORZero(item.getId(),store);
-            storeItem.setPrice(priceOfItem);
-            allStoreItemsWithPriceForSpecificStore.put(item.getId(), storeItem);
+        //עבור מצב בו מביאים במקום חנות NULL יש להביא את רשימת כל המוצרים באזור עם מחיר 0
+        //noy 11/11
+        if(store==null)
+        {
+            for (Item item : allItems.values()) {
+                int price=0;
+                StoreItem storeItem = new StoreItem();
+                storeItem.setItem(item);
+                storeItem.setStore(null);
+                storeItem.setPrice(price);
+                allStoreItemsWithPriceForSpecificStore.put(item.getId(), storeItem);
+            }
+        }
+
+        else
+        {
+            for (Item item : allItems.values()) {
+                StoreItem storeItem = new StoreItem();
+                storeItem.setItem(item);
+                //currentOrder.setStoreOrderMadeFrom(store);
+                storeItem.setStore(store);
+                int priceOfItem = getPriceOfItemInThisStoreORZero(item.getId(), store);
+                storeItem.setPrice(priceOfItem);
+                allStoreItemsWithPriceForSpecificStore.put(item.getId(), storeItem);
+            }
         }
 
         return allStoreItemsWithPriceForSpecificStore;
