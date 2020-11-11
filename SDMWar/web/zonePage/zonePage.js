@@ -154,7 +154,7 @@ function getScriptsFromServer() {
         } else {
             $.getScript(buildUrlWithContextPath("zonePage/customerInfo.js"));
         }
-        $.ajaxSetup({cache: false});
+
     }
     else {
         setTimeout(getScriptsFromServer, 200);

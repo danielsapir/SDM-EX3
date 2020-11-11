@@ -2,6 +2,7 @@ package servlets;
 
 import SDM.*;
 import SDM.DTO.OrderDTO;
+import SDM.DTO.StoreItemDTO;
 import com.google.gson.Gson;
 import constants.Constants;
 import utils.DateUtils;
@@ -17,10 +18,61 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class CustomerOrderServlet extends HttpServlet {
     //Request type (aka reqType) constants
     private static final String INITIAL_ORDER_DATA = "inital-order-data";
+    private static final String ALL_ITEMS_FOR_SALE = "all-items-for-sale";
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        UserManager userManager = ServletUtils.getUserManager(getServletContext());
+        String reqType = req.getParameter(Constants.REQTYPE);
+        User userWhoRequest = userManager.getUserByName(SessionUtils.getUsername(req));
+        String response = null;
+
+        if(userWhoRequest.getType() == User.Type.CUSTOMER) {
+            response = handleGetRequestType(reqType, (Customer)userWhoRequest, req);
+        }
+
+        try(PrintWriter out = resp.getWriter()) {
+            out.println(response);
+            out.flush();
+        }
+    }
+
+    private String handleGetRequestType(String reqType, Customer customer, HttpServletRequest req) {
+        String jsonRes = null;
+        Gson gson = new Gson();
+
+        switch (reqType) {
+            case ALL_ITEMS_FOR_SALE:
+                jsonRes = getStoreItemForSale(customer, req);
+
+                break;
+        }
+
+        return jsonRes;
+    }
+
+    private String getStoreItemForSale(Customer customer, HttpServletRequest req) {
+        Gson gson = new Gson();
+        Map<Integer, StoreItem> integerStoreItemMap = null;
+        Store storeBoughtFrom = customer.getCurrentOrder() instanceof OneStoreOrder ?
+                ((OneStoreOrder) customer.getCurrentOrder()).getStoreOrderMadeFrom()
+                :
+                null;
+        integerStoreItemMap = SessionUtils.getCurrentZone(req).getAllStoreItemsForSaleInCurrentStoreForOrder(storeBoughtFrom);
+        LinkedList<StoreItemDTO> storeItemDTOList = new LinkedList<>();
+
+        for(StoreItem storeItem : integerStoreItemMap.values()) {
+            storeItemDTOList.add(new StoreItemDTO(storeItem));
+        }
+
+        return gson.toJson(storeItemDTOList);
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -65,7 +117,15 @@ public class CustomerOrderServlet extends HttpServlet {
                         Integer.parseInt(req.getParameter(X_CORDINATE_PARAM)),
                         Integer.parseInt(req.getParameter(Y_CORDINATE_PARAM))));
         Date dateOfOrder = DateUtils.jsonDateToJavaDate(req.getParameter(DATE_PARAM));
-        OrderType orderType = OrderType.valueOf(req.getParameter(ORDER_TYPE_PARAM).toUpperCase());
+        String orderTypeStr = req.getParameter(ORDER_TYPE_PARAM).toUpperCase();
+        OrderType orderType;
+        if(orderTypeStr.equals("DYNAMIC")) {
+            orderType = OrderType.DYNAMIC_ORDER;
+        }
+        else {
+            orderType = OrderType.ONE_STORE_ORDER;
+        }
+
         Zone currentZone = SessionUtils.getCurrentZone(req);
         Store storeOrderMadeFrom = null;
 

@@ -10,3 +10,7 @@ div.carousel-inner {
 .errorText{
     color : red;
 }
+
+.choosed {
+    border: 2px solid teal;
+}
