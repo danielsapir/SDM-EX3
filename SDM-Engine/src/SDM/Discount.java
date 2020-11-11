@@ -70,7 +70,9 @@ public class Discount
     //noy 11/11
     public Offer getOfferById(int offerId)
     {
-        return (new Offer());
+
+        Offer retOffer=this.thenGet.getOffers().get(offerId);
+        return (retOffer);
     }
 
 }
