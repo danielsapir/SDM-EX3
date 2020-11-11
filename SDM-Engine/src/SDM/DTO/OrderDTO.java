@@ -27,7 +27,7 @@ public class OrderDTO
     {
         this.id=order.getId();
         this.date=order.getDate();
-        this.orderDestination=order.getCustomer().getLocation();
+        this.orderDestination=order.getDestinationLocation();
         this.numOfStoresInThisOrder=order.getListOfOneStoreOrders().size();
         this.numOfItemsInThisOrder=order.getTotalItemsInOrder();
         this.priceOfAllItemsInThisOrder=order.getPriceOfAllItems();

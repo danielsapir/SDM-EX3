@@ -2,9 +2,7 @@ package SDM.DTO;
 
 import SDM.Location;
 import SDM.OneStoreOrder;
-import SDM.OrderType;
 
-import javax.management.ObjectName;
 import java.util.Date;
 
 public class OneStoreOrderDTO
@@ -12,7 +10,7 @@ public class OneStoreOrderDTO
     int id;
     Date date;
     String customerName;
-    Location customerLocation;
+    Location destinationLocation;
     double numOfItemsInThisOrder;
     double priceOfItemsInThisOrder;
     double deliveryPrice;
@@ -22,7 +20,7 @@ public class OneStoreOrderDTO
         this.id=oneStoreOrder.getId();
         this.date=oneStoreOrder.getDate();
         this.customerName= oneStoreOrder.getCustomer().getName();
-        this.customerLocation= oneStoreOrder.getCustomer().getLocation();
+        this.destinationLocation = oneStoreOrder.getDestinationLocation();
         this.numOfItemsInThisOrder=oneStoreOrder.getTotalItemsInOrder();
         this.priceOfItemsInThisOrder=oneStoreOrder.getPriceOfAllItems();
         this.deliveryPrice=oneStoreOrder.getDeliveryPrice();
