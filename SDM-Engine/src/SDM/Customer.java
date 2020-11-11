@@ -152,7 +152,8 @@ public class Customer extends User //implements Locatable
     //noy 11/11
     public Discount getDiscountById(int discountId)
     {
-        return (new Discount());
+        Discount retDiscount=this.currentOrder.discountsAvailable.get(discountId);
+        return (retDiscount);
     }
 
 
