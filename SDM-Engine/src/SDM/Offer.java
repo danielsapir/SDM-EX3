@@ -7,6 +7,20 @@ public class Offer
     protected int itemId;
     protected double Amount;
     protected int forAdditionalPrice;
+    //noy 11/11
+    private  int offerId=0;
+    //noy 11/11
+    public Offer()
+    {
+        this.offerId++;
+
+    }
+
+
+
+    public int getOfferId() {
+        return offerId;
+    }
 
     public int getItemId() {
         return itemId;

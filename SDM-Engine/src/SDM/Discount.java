@@ -3,10 +3,24 @@ package SDM;
 public class Discount
 {
 
+
     private String name;
     private IfBuy ifBuy;
     private ThenGet thenGet;
     private Store storeOfDiscount;
+    //noy 11/11
+    private static int discountId=0;
+
+    //noy 11/11
+    public Discount()
+    {
+        this.discountId++;
+    }
+
+
+    public int getDiscountId() {
+        return discountId;
+    }
 
     public Store getStoreOfDiscount() {
         return storeOfDiscount;
@@ -50,4 +64,13 @@ public class Discount
 
         return itemInDiscount;
     }
+
+
+
+    //noy 11/11
+    public Offer getOfferById(int offerId)
+    {
+        return (new Offer());
+    }
+
 }
