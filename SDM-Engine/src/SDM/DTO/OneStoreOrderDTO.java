@@ -15,6 +15,12 @@ public class OneStoreOrderDTO
     double priceOfItemsInThisOrder;
     double deliveryPrice;
 
+    String storeName;
+    double distanceToStore;
+    double ppk;
+    int numTypesOfItemsInThisOrder;
+    Location storeLocation;
+
     public OneStoreOrderDTO(OneStoreOrder oneStoreOrder)
     {
         this.id=oneStoreOrder.getId();
@@ -24,6 +30,12 @@ public class OneStoreOrderDTO
         this.numOfItemsInThisOrder=oneStoreOrder.getTotalItemsInOrder();
         this.priceOfItemsInThisOrder=oneStoreOrder.getPriceOfAllItems();
         this.deliveryPrice=oneStoreOrder.getDeliveryPrice();
+
+        this.storeName=oneStoreOrder.getStoreOrderMadeFrom().getName();
+        this.distanceToStore=oneStoreOrder.distanceBetweenCostumerAndStore();
+        this.ppk=oneStoreOrder.getStoreOrderMadeFrom().getDeliveryPPK();
+        this.numTypesOfItemsInThisOrder=oneStoreOrder.getTotalItemsInOrder();
+        this.storeLocation=oneStoreOrder.getStoreOrderMadeFrom().getLocation();
     }
 
 }

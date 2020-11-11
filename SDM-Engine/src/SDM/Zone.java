@@ -145,7 +145,6 @@ public class Zone
     {
         Map<Integer, StoreItem> allStoreItemsWithPriceForSpecificStore = new HashMap<>();
 
-        //עבור מצב בו מביאים במקום חנות NULL יש להביא את רשימת כל המוצרים באזור עם מחיר 0
         //noy 11/11
         if(store==null)
         {

@@ -9,6 +9,8 @@ import java.util.*;
 
 public class SDMEngine {
 
+    private Map<String,Zone> allZones=new HashMap<>();
+
     /*
     private Map<Integer, Store> allStores = new HashMap<>();
     private Map<Integer, Item> allItems = new HashMap<>();
@@ -19,18 +21,14 @@ public class SDMEngine {
     private SimpleBooleanProperty anyOrderMade = new SimpleBooleanProperty(false);
     */
 
-    private Map<String,Zone> allZones=new HashMap<>();
-
 
     public void loadXMLToZone(String fileContent, Owner owner)
-            throws DuplicateStoreIDException, DuplicateStoreItemException, LocationIsOutOfBorderException, JAXBException, FileNotFoundException, DuplicateItemException, FileNotEndWithXMLException, TryingToGivePriceOfItemWhichIDNotExistException, TryingToGiveDifferentPricesForSameStoreItemException, ItemNoOneSellException, StoreWithNoItemException, DuplicatedLocationException, DuplicateCustomerIdException, DiscountWithItemNotSoldByStoreException
-    {
+            throws DuplicateStoreIDException, DuplicateStoreItemException, LocationIsOutOfBorderException, JAXBException, FileNotFoundException, DuplicateItemException, FileNotEndWithXMLException, TryingToGivePriceOfItemWhichIDNotExistException, TryingToGiveDifferentPricesForSameStoreItemException, ItemNoOneSellException, StoreWithNoItemException, DuplicatedLocationException, DuplicateCustomerIdException, DiscountWithItemNotSoldByStoreException, DuplicateZoneNameException {
         XMLHandlerBaseOnSchema xmlHandler = new XMLHandlerBaseOnSchema();
         Zone zone= xmlHandler.updateZone(fileContent);
 
         //noy 11/11
-        verifyNoDuplicatedZone(zone);
-
+        verifyNoDuplicatedZone(zone.getName());
 
         zone.setOwner(owner);
         zone.getOwner().addStoresToOwner(zone.getAllStoresMap());//מטודה באונר שמוסיפה את החנויות למפ באונר
@@ -50,13 +48,12 @@ public class SDMEngine {
     }
 
     //noy 11/11
-    private void verifyNoDuplicatedZone(Zone zone)
+    private void verifyNoDuplicatedZone(String zoneName)throws DuplicateZoneNameException
     {
-
-
-
-
-
+        boolean flaIsValidNameZone = allZones.containsKey(zoneName);
+        if (!flaIsValidNameZone) {
+            throw (new DuplicateZoneNameException(zoneName));
+        }
     }
 
 
