@@ -64,4 +64,13 @@ public class Discount
 
         return itemInDiscount;
     }
+
+
+
+    //noy 11/11
+    public Offer getOfferById(int offerId)
+    {
+        return (new Offer());
+    }
+
 }
