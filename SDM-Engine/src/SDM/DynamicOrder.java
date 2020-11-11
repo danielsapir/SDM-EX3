@@ -52,7 +52,7 @@ public class DynamicOrder extends Order{
 
         priceOfAllItems = calculatePriceOfOrderItems();
         totalPrice = priceOfAllItems + deliveryPrice;
-        customer.addNewOrder(this);
+        customer.addOrder(this);
     }
 
     //Greedy algorithm
