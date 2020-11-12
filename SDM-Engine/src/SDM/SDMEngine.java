@@ -50,8 +50,7 @@ public class SDMEngine {
     //noy 11/11
     private void verifyNoDuplicatedZone(String zoneName)throws DuplicateZoneNameException
     {
-        boolean flaIsValidNameZone = allZones.containsKey(zoneName);
-        if (!flaIsValidNameZone) {
+        if ( allZones.containsKey(zoneName)) {
             throw (new DuplicateZoneNameException(zoneName));
         }
     }

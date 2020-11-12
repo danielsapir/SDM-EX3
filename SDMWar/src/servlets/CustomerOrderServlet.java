@@ -1,8 +1,11 @@
 package servlets;
 
 import SDM.*;
+import SDM.DTO.DiscountDTO;
+import SDM.DTO.OneStoreOrderDTO;
 import SDM.DTO.OrderDTO;
 import SDM.DTO.StoreItemDTO;
+import SDM.Exception.NegativeAmountOfItemInException;
 import com.google.gson.Gson;
 import constants.Constants;
 import utils.DateUtils;
@@ -24,6 +27,10 @@ public class CustomerOrderServlet extends HttpServlet {
     //Request type (aka reqType) constants
     private static final String INITIAL_ORDER_DATA = "inital-order-data";
     private static final String ALL_ITEMS_FOR_SALE = "all-items-for-sale";
+    private static final String ADD_ITEMS_TO_ORDER = "add-items-to-order";
+    private static final String DYNAMIC_ORDER_MID_INFO = "dynamic-order-mid-info";
+    private static final String GET_DISCOUNTS = "get-discounts";
+    private static final String ADD_DISCOUNT = "add-discount"; //TODO
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,12 +56,45 @@ public class CustomerOrderServlet extends HttpServlet {
 
         switch (reqType) {
             case ALL_ITEMS_FOR_SALE:
-                jsonRes = getStoreItemForSale(customer, req);
-
+                synchronized (customer) {
+                    jsonRes = getStoreItemForSale(customer, req);
+                }
+                break;
+            case DYNAMIC_ORDER_MID_INFO:
+                synchronized (customer) {
+                    jsonRes = getListOfOneStoreOrder(customer);
+                }
+                break;
+            case GET_DISCOUNTS:
+                synchronized (customer) {
+                    jsonRes = getDiscountsOfCurrentOrder(customer);
+                }
                 break;
         }
 
         return jsonRes;
+    }
+
+    private String getDiscountsOfCurrentOrder(Customer customer) {
+        Gson gson = new Gson();
+        LinkedList<DiscountDTO> discountDTOS = new LinkedList<>();
+
+        for(Discount discount :customer.getListOfDiscountsOfCurrentOrder()) {
+            discountDTOS.add(new DiscountDTO(discount));
+        }
+
+        return gson.toJson(discountDTOS);
+    }
+
+    private String getListOfOneStoreOrder(Customer customer) {
+        Gson gson = new Gson();
+        LinkedList<OneStoreOrderDTO> oneStoreOrderDTOS = new LinkedList<>();
+
+        for(OneStoreOrder oneStoreOrder : customer.getListOfOneStoreOrdersOfCurrentOrder()) {
+            oneStoreOrderDTOS.add(new OneStoreOrderDTO(oneStoreOrder));
+        }
+
+        return gson.toJson(oneStoreOrderDTOS);
     }
 
     private String getStoreItemForSale(Customer customer, HttpServletRequest req) {
@@ -98,11 +138,56 @@ public class CustomerOrderServlet extends HttpServlet {
 
         switch (reqType) {
             case INITIAL_ORDER_DATA:
-                startNewOrderForCustomer(customer, req);
+                synchronized (customer) {
+                    startNewOrderForCustomer(customer, req);
+                }
+                break;
+            case ADD_ITEMS_TO_ORDER:
+                synchronized (customer) {
+                    addItemsToOrder(customer, req);
+                }
+                break;
+            case ADD_DISCOUNT:
+                synchronized (customer) {
+                    addDiscountToOrder(customer, req);
+                }
                 break;
         }
 
         return jsonRes;
+    }
+
+    private void addDiscountToOrder(Customer customer, HttpServletRequest req) {
+        String DISCOUNT_ID_PARAM = "discountId";
+        String OFFER_ID_PARAM = "idOfOffer";
+        int discountId = Integer.parseInt(req.getParameter(DISCOUNT_ID_PARAM));
+        Offer offerChoose = null;
+        Discount discountToUse = customer.getDiscountById(discountId);
+
+        if(discountToUse.getThenGet().getOperator().equals("ONE-OF")) {
+            int offerId = Integer.parseInt(req.getParameter(OFFER_ID_PARAM));
+            offerChoose = discountToUse.getOfferById(offerId);
+        }
+
+        try {
+            customer.useDiscountOfCurrentOrder(discountToUse, offerChoose);
+        } catch (NegativeAmountOfItemInException ignored) { }
+    }
+
+    private void addItemsToOrder(Customer customer, HttpServletRequest req) {
+        String CART_PARAM = "cart";
+        Gson gson = new Gson();
+        String itemsAndAmountStr = req.getParameter(CART_PARAM);
+        ItemIdAndAmountData[] itemIdAndAmountDataArr = gson.fromJson(itemsAndAmountStr, ItemIdAndAmountData[].class);
+        for(ItemIdAndAmountData itemIdAndAmountData : itemIdAndAmountDataArr) {
+            try {
+                customer.addItemToCurrentOrder(itemIdAndAmountData.getId(), itemIdAndAmountData.getAmount());
+            } catch (NegativeAmountOfItemInException ignored) { }
+        }
+        try {
+            customer.continueCurrentOrderToDiscounts();
+        } catch (NegativeAmountOfItemInException ignored) {
+        }
     }
 
     private void startNewOrderForCustomer(Customer customer, HttpServletRequest req) {
@@ -138,6 +223,19 @@ public class CustomerOrderServlet extends HttpServlet {
         }
         if(orderType == OrderType.DYNAMIC_ORDER) {
             customer.createNewDynamicOrder(customer, dateOfOrder ,currentZone, destinationLocation);
+        }
+    }
+
+    private static class ItemIdAndAmountData{
+        private int id;
+        private double amount;
+
+        public int getId() {
+            return id;
+        }
+
+        public double getAmount() {
+            return amount;
         }
     }
 }
