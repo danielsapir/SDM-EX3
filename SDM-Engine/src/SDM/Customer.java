@@ -128,13 +128,12 @@ public class Customer extends User //implements Locatable
         currentOrderZone.addOrder(currentOrder);
 
 
-        currentOrder = null;
+        //currentOrder = null;
     }
 
     public void cancelCurrentOrder() {
         currentOrder = null;
     }
-
 
     /*
     public boolean isAnyOrderMade() {
@@ -147,14 +146,37 @@ public class Customer extends User //implements Locatable
 
      */
 
-
-
-    //noy 11/11
+    //noy 12/11
     public Discount getDiscountById(int discountId)
     {
-        Discount retDiscount=this.currentOrder.discountsAvailable.get(discountId);
-        return (retDiscount);
+        for (Discount discount:this.currentOrder.discountsAvailable)
+        {
+           if(discount.getDiscountId()==discountId)
+           {
+               return (discount);
+           }
+        }
+        return (null);//stam
     }
+    
+    //noy 12/11
+    public void  giveFeedBackToStore(int storeId, int rating,String description)
+    {
+       // FeedBack feedBack=new FeedBack(this.getName(),this.currentOrder.getDate(), rating,description);
+        for (OneStoreOrder oneStoreOrder:this.currentOrder.getListOfOneStoreOrders())
+        {
+            if(oneStoreOrder.getStoreOrderMadeFrom().getId()==storeId)
+            {
+                oneStoreOrder.addNewFeedBack(rating,description);
+            }
+        }
+        
+    }
+
+    
+
+
+
 
 
 
