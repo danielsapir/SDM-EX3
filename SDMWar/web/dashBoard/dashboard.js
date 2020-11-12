@@ -63,7 +63,7 @@ function updateZonesData() {
                     "<td>" + zone.itemsNumber + "</td>" +
                     "<td>" + zone.storesNumber + "</td>" +
                     "<td>" + zone.ordersNumber + "</td>" +
-                    "<td>" + zone.orderPriceAvg + "</td>" +
+                    "<td>" + zone.orderPriceAvg.toFixed(2) + "</td>" +
                     "</tr>"));
 
                 newTableRow.click(function () {
@@ -128,9 +128,9 @@ function updateTransactions() {
                 transactionsTableBody.append("<tr>" +
                     "<td>" + capitalFirst(decamelize(transaction.type, " "), true) +  "</td>" +
                     "<td>" + transaction.date + "</td>" +
-                    "<td>" + transaction.amountOfAction + "</td>" +
-                    "<td>" + transaction.amountBeforeOperation + "</td>" +
-                    "<td>" + transaction.amountAfterOperation + "</td>" +
+                    "<td>" + transaction.amountOfAction.toFixed(2) + "</td>" +
+                    "<td>" + transaction.amountBeforeOperation.toFixed(2) + "</td>" +
+                    "<td>" + transaction.amountAfterOperation.toFixed(2) + "</td>" +
                     "</tr>")
             });
         }

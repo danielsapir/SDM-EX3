@@ -59,7 +59,7 @@ function updateItemsInfo(){
                 "<td>" + item.name + "</td>" +
                 "<td>" + capitalFirst(item.type, true) + "</td>" +
                 "<td>" + item.numOfStoresSellThisItem + "</td>" +
-                "<td>" + item.avgPrice + "</td>" +
+                "<td>" + item.avgPrice.toFixed(2) + "</td>" +
                 "<td>" + item.totalAmountSoldOnAllStores + "</td>" +
                 "</tr>")
             })
@@ -132,9 +132,9 @@ function updateStoresInfo() {
                 "<td>(" + store.location.location.x + ", " + store.location.location.y + ")</td>" +
                 "<td id='itemsButton" + index + "'></td>" +
                 "<td>" + store.numOfOrdersFromThisStore + "</td>" +
-                "<td>" + store.totalCostOfSoldItems +"</td>" +
+                "<td>" + store.totalCostOfSoldItems.toFixed(2) +"</td>" +
                 "<td>" + store.ppk +"</td>" +
-                "<td>" + store.totalCostOfDeliveries +"</td>" +
+                "<td>" + store.totalCostOfDeliveries.toFixed(2) +"</td>" +
                 "</tr>");
                 
                 createStoreItemShowerButton(store).appendTo($("#itemsButton" + index));

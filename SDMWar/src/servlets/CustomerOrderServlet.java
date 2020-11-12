@@ -30,7 +30,13 @@ public class CustomerOrderServlet extends HttpServlet {
     private static final String ADD_ITEMS_TO_ORDER = "add-items-to-order";
     private static final String DYNAMIC_ORDER_MID_INFO = "dynamic-order-mid-info";
     private static final String GET_DISCOUNTS = "get-discounts";
-    private static final String ADD_DISCOUNT = "add-discount"; //TODO
+    private static final String ADD_DISCOUNT = "add-discount";
+    private static final String ORDER_SUMMARY_INFO = "order-summary-info";
+    private static final String ACCEPT_ORDER = "accept-order";
+    private static final String CANCEL_ORDER = "cancel-order";
+    private static final String GIVE_FEEDBACK_TO_STORE = "give-feedback-to-store";
+    private static final String DONE_FEEDBACK = "done-feedback";
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -70,9 +76,25 @@ public class CustomerOrderServlet extends HttpServlet {
                     jsonRes = getDiscountsOfCurrentOrder(customer);
                 }
                 break;
+            case ORDER_SUMMARY_INFO:
+                synchronized (customer) {
+                    jsonRes = getOneStoreOrderSummary(customer);
+                }
+                break;
         }
 
         return jsonRes;
+    }
+
+    private String getOneStoreOrderSummary(Customer customer) {
+        Gson gson = new Gson();
+        LinkedList<OneStoreOrderDTO> oneStoreOrderDTOS = new LinkedList<>();
+
+        for(OneStoreOrder oneStoreOrder : customer.getListOfOneStoreOrdersOfCurrentOrder()) {
+            oneStoreOrderDTOS.add(new OneStoreOrderDTO(oneStoreOrder));
+        }
+
+        return gson.toJson(oneStoreOrderDTOS);
     }
 
     private String getDiscountsOfCurrentOrder(Customer customer) {
@@ -152,14 +174,48 @@ public class CustomerOrderServlet extends HttpServlet {
                     addDiscountToOrder(customer, req);
                 }
                 break;
+            case ACCEPT_ORDER:
+                synchronized (customer) {
+                    try {
+                        customer.completeCurrentOrder();
+                    } catch (NegativeAmountOfItemInException ignored) { }
+                }
+                break;
+            case CANCEL_ORDER:
+                synchronized (customer) {
+                    customer.cancelCurrentOrder();
+                }
+                break;
+            case GIVE_FEEDBACK_TO_STORE:
+                synchronized (customer) {
+                    giveFeedbackToStore(customer, req);
+                }
+                break;
+            case DONE_FEEDBACK:
+                synchronized (customer) {
+                    customer.doneGiveFeedBack();
+                }
+                break;
         }
 
         return jsonRes;
     }
 
+    private void giveFeedbackToStore(Customer customer, HttpServletRequest req) {
+        String STORE_ID_PARAM = "storeId";
+        String RATE_PARAM = "rate";
+        String DESCRIPTION_PARAM = "description";
+
+        int storeId = Integer.parseInt(req.getParameter(STORE_ID_PARAM));
+        int rate = Integer.parseInt(req.getParameter(RATE_PARAM));
+        String description = req.getParameter(DESCRIPTION_PARAM);
+
+        customer.giveFeedBackToStore(storeId, rate, description);
+    }
+
     private void addDiscountToOrder(Customer customer, HttpServletRequest req) {
         String DISCOUNT_ID_PARAM = "discountId";
-        String OFFER_ID_PARAM = "idOfOffer";
+        String OFFER_ID_PARAM = "offerId";
         int discountId = Integer.parseInt(req.getParameter(DISCOUNT_ID_PARAM));
         Offer offerChoose = null;
         Discount discountToUse = customer.getDiscountById(discountId);

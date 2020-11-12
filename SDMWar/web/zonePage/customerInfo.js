@@ -36,9 +36,9 @@ function updateOrdersInfo() {
                     "<td>(" + order.orderDestination.location.x + ", " + order.orderDestination.location.y + ")</td>" +
                     "<td>" + order.numOfStoresInThisOrder + "</td>" +
                     "<td>" + order.numOfItemsInThisOrder + "</td>" +
-                    "<td>" + order.priceOfAllItemsInThisOrder + "</td>" +
-                    "<td>" + order.priceOfAllDeliveriesInThisOrder +"</td>" +
-                    "<td>" + order.totalPrice +"</td>" +
+                    "<td>" + order.priceOfAllItemsInThisOrder.toFixed(2) + "</td>" +
+                    "<td>" + order.priceOfAllDeliveriesInThisOrder.toFixed(2) +"</td>" +
+                    "<td>" + order.totalPrice.toFixed(2) +"</td>" +
                     "</tr>");
 
                 customerOrderRow.click(function () {
@@ -70,7 +70,7 @@ function updateOrdersInfo() {
                             "<td>" + capitalFirst(orderItem.type, true) + "</td>" +
                             "<td>" + orderItem.amount + "-" + orderItem.storeName + "</td>" +
                             "<td>" + orderItem.pricePerOne + "</td>" +
-                            "<td>" + (orderItem.pricePerOne*orderItem.amount) + "</td>" +
+                            "<td>" + ((orderItem.pricePerOne*orderItem.amount).toFixed(2)) + "</td>" +
                             "<td>" + (orderItem.isPartOfDiscount ? "Yes :)" : "No :(") + "</td>" +
                             "</tr>")
 

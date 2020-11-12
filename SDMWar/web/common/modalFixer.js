@@ -4,7 +4,7 @@ function showModal(head, body) {
         "\n" +
         "            <!-- Modal content-->\n" +
         "            <div class=\"modal-content\">\n" +
-        "                <div class=\"modal-header\">\n" +
+        "                <div class=\"modal-header text-left\">\n" +
         "                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n" +
         "                    <h4 class=\"modal-title text-left\" id=\"modal-title-head\">"+ head + "</h4>\n" +
         "                </div>\n" +
