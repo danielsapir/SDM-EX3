@@ -3,18 +3,18 @@ package SDM;
 public class Discount
 {
 
-
+    private int discountId;
     private String name;
     private IfBuy ifBuy;
     private ThenGet thenGet;
     private Store storeOfDiscount;
     //noy 11/11
-    private static int discountId=0;
+    private static int idCounter = 0;
 
     //noy 11/11
     public Discount()
     {
-        this.discountId++;
+        this.discountId = ++idCounter;
     }
 
 

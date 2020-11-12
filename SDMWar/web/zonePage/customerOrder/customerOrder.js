@@ -86,7 +86,7 @@ function assignDeliveryPrice() {
         if(store.id === chosenStoreId) {
             if(checkIfStoreLocationIsOk(store)) {
                 var deliveryPrice = calculateDeliveryPrice(store.ppk, store.location);
-                $("#deliveryPriceHolder").text(deliveryPrice);
+                $("#deliveryPriceHolder").text(deliveryPrice.toFixed(2));
             }
         }
     });
@@ -236,21 +236,21 @@ function showDynamicOrderMidOffer() {
         },
 
 
-        //oneStoreOrders = [{id:2, date:.., customerName:"Mosh", destinationLocation: { location: {x:1,y:2}}, numOfItemsInThisOrder:12, priceOfItemsInThisOrder:123.4
+        //oneStoreOrders = [{storeId:2, date:.., customerName:"Mosh", destinationLocation: { location: {x:1,y:2}}, numOfItemsInThisOrder:12, priceOfItemsInThisOrder:123.4
         //                  deliveryPrice:23.4, storeName:"Rami-Levi", distanceToStore: 42.1, ppk:23, numTypesOfItemsInThisOrder:2, storeLocation:{location{x:2,y:4}}}..]
         success: function (oneStoreOrders) {
             let dynamicMidTableBody = $("#dynamic-mid-order-table").find("tbody");
 
             $.each(oneStoreOrders || [], function (index, oneStoreOrder) {
                 dynamicMidTableBody.append("<tr>" +
-                    "<td>" + oneStoreOrder.id + "</td>" +
+                    "<td>" + oneStoreOrder.storeId + "</td>" +
                     "<td>" + oneStoreOrder.storeName + "</td>" +
                     "<td>(" + oneStoreOrder.storeLocation.location.x + ", " + oneStoreOrder.storeLocation.location.y + ")</td>" +
-                    "<td>" + oneStoreOrder.distanceToStore + "</td>" +
+                    "<td>" + oneStoreOrder.distanceToStore.toFixed(2) + "</td>" +
                     "<td>" + oneStoreOrder.ppk + "</td>" +
-                    "<td>" + oneStoreOrder.deliveryPrice + "</td>" +
+                    "<td>" + oneStoreOrder.deliveryPrice.toFixed(2) + "</td>" +
                     "<td>" + oneStoreOrder.numTypesOfItemsInThisOrder + "</td>" +
-                    "<td>" + (oneStoreOrder.priceOfItemsInThisOrder + oneStoreOrder.deliveryPrice)  + "</td>" +
+                    "<td>" + ((oneStoreOrder.priceOfItemsInThisOrder + oneStoreOrder.deliveryPrice).toFixed(2))  + "</td>" +
                     "</tr>");
             });
 
@@ -349,9 +349,9 @@ function showDiscountsOfOrder() {
                         totalPrice += (discount.thenGetDTO.offerDTOList)[i].forAdditionalPrice;
                     }
 
-                    discountCard.find("#totalPricePlaceHolder").text(totalPrice);
-                    offerContainer.attr("multiple");
-                    offerContainer.attr("disabled");
+                    discountCard.find("#totalPricePlaceHolder").text(totalPrice.toFixed(2));
+                    offerContainer.attr("multiple", true);
+                    offerContainer.attr("disabled", true);
                 }
 
                 discountCard.find("#offerChoosedBtn").click(function () {
@@ -392,9 +392,214 @@ $(function () {
     })
 })
 
+
+function createOrderItemShowersButton(oneStoreOrder) {
+    var orderItemShowerBtn = $("<button>Click here to see items</button>").attr("type", "button").
+    addClass("btn").addClass("btn-outline-info");
+    orderItemShowerBtn.click(function () {
+        var itemsTableHtml = $(" <div class=\"row\">\n" +
+            "        <table class=\"table table-hover col-sm-12\">\n" +
+            "            <thead>\n" +
+            "            <tr>\n" +
+            "                <th>Item ID</th>\n" +
+            "                <th>Item name</th>\n" +
+            "                <th>Weight/Quantity</th>\n" +
+            "                <th>Amount sold</th>\n" +
+            "                <th>Price for unit</th>\n" +
+            "                <th>Total price</th>\n" +
+            "                <th>Is bought in discount</th>\n" +
+            "            </tr>\n" +
+            "            </thead>\n" +
+            "            <tbody>\n" +
+            "            </tbody>\n" +
+            "        </table>\n" +
+            "    </div>");
+
+
+        //orderItem = {id:12, name:"Nifo", type:"WEIGHT"/"QUANTITY", storeName: "Rami-levi", storeId: 2, amount: 23.4, pricePerOne: 23.4, isPartOfDiscount:true/false}
+        $.each(oneStoreOrder.itemsInOrder || [], function (index, orderItem) {
+            itemsTableHtml.find("tbody").append("<tr>" +
+                "<td>" + orderItem.id + "</td>" +
+                "<td>" + orderItem.name + "</td>" +
+                "<td>" + capitalFirst(orderItem.type, true) + "</td>" +
+                "<td>" + orderItem.amount.toFixed(2) + "</td>" +
+                "<td>" + orderItem.pricePerOne.toFixed(2) + "</td>" +
+                "<td>" + (orderItem.pricePerOne * orderItem.amount).toFixed(2) + "</td>" +
+                "<td>" + (orderItem.isPartOfDiscount ? "YES" : "NO") + "</td>" +
+                "</tr>")
+
+        })
+        showModal("Items sold by " + oneStoreOrder.storeName, itemsTableHtml.prop("outerHTML"));
+    });
+
+    return orderItemShowerBtn;
+}
+
 $(function () {
     $("#discountChoiseBtn").click(function () {
-        //TODO change to summary
+        $.ajax({
+            url: CUSTOMER_ORDER_URL,
+            method: "GET",
+            data: {
+                reqtype: "order-summary-info"
+            },
+
+            //oneStoreOrders = [{storeId:2, date:.., customerName:"Mosh", destinationLocation: { location: {x:1,y:2}}, numOfItemsInThisOrder:12, priceOfItemsInThisOrder:123.4
+            //                  deliveryPrice:23.4, storeName:"Rami-Levi", distanceToStore: 42.1, ppk:23, numTypesOfItemsInThisOrder:2, storeLocation:{location{x:2,y:4}}}..]
+            success: function (oneStoreOrders) {
+                let summaryStoreTableBody = $("#order-summary-table").find("tbody");
+                let totalPriceOfItemsInOrders = 0;
+                let totalPriceOfDeliveriesInOrders = 0;
+                $.each(oneStoreOrders || [], function (index, oneStoreOrder) {
+                    let tableRowOfOneStoreOrder = $("<tr>" +
+                        "<td>" + oneStoreOrder.storeId + "</td>" +
+                        "<td>" + oneStoreOrder.storeName + "</td>" +
+                        "<td>" + oneStoreOrder.ppk + "</td>" +
+                        "<td>" + oneStoreOrder.distanceToStore.toFixed(2) + "</td>" +
+                        "<td>" + oneStoreOrder.deliveryPrice.toFixed(2) + "</td>" +
+                        "<td id='orderItemsBtn'></td>" +
+                        "</tr>");
+
+                    createOrderItemShowersButton(oneStoreOrder).appendTo(tableRowOfOneStoreOrder.find("#orderItemsBtn"));
+                    summaryStoreTableBody.append(tableRowOfOneStoreOrder);
+                    totalPriceOfItemsInOrders += oneStoreOrder.priceOfItemsInThisOrder;
+                    totalPriceOfDeliveriesInOrders += oneStoreOrder.deliveryPrice;
+                });
+                $("#totalPriceOfItemsPlaceHolder").text(totalPriceOfItemsInOrders.toFixed(2));
+                $("#totalPriceOfDeliveriesPlaceHolder").text(totalPriceOfDeliveriesInOrders.toFixed(2));
+                $("#totalPriceOfOrderPlaceHolder").text((totalPriceOfItemsInOrders+totalPriceOfDeliveriesInOrders).toFixed(2));
+                $("#order-carousel").carousel(4);
+            }
+
+        });
+    });
+})
+
+$(function () {
+    $("#orderCancelBtn").click(function () {
+        $.ajax({
+            url: CUSTOMER_ORDER_URL,
+            method: "POST",
+            data: {
+                reqtype: "cancel-order"
+            },
+
+            success: function (response) {
+                location.reload();
+            }
+        })
     })
 })
+
+function getFeedbackData() {
+    $.ajax({
+        url: CUSTOMER_ORDER_URL,
+        method: "GET",
+        data: {
+            reqtype: "order-summary-info"
+        },
+
+        //oneStoreOrders = [{storeId:2, date:.., customerName:"Mosh", destinationLocation: { location: {x:1,y:2}}, numOfItemsInThisOrder:12, priceOfItemsInThisOrder:123.4
+        //                  deliveryPrice:23.4, storeName:"Rami-Levi", distanceToStore: 42.1, ppk:23, numTypesOfItemsInThisOrder:2, storeLocation:{location{x:2,y:4}}}..]
+        success: function (oneStoreOrders) {
+            let feedbackGiverContainer = $("#feedBackGiverContainer");
+            $.each(oneStoreOrders || [], function (index, oneStoreOrder) {
+                let feedBackGiverCard = $(
+                    "<div class='card border-dark'>" +
+                        "<div class='card-header row'>" +
+                            "<div class='col-sm-12'>" +
+                                "<p>&#128150<strong>" + oneStoreOrder.storeName + "</strong>&#128150</p>" +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='card-body text-center'>" +
+                            "<div class='container-fluid'>" +
+                                "<div class='row'>" +
+                                    "<div class='col-sm-12'>" +
+                                        "<input id='star-rating' class='rating rating-loading' value='0' data-min='0' data-max='5' data-step='1' data-size='md'>" +
+                                    "</div>" +
+                                "</div>" +
+                                "<div class='row'>" +
+                                    "<div class='col-sm 12'>" +
+                                        "<div class='form-group'>" +
+                                            "<label for='description'>Description: </label>" +
+                                            "<textarea class='form-control' rows='4' id='description' disabled></textarea>" +
+                                        "</div>" +
+                                    "</div>" +
+                                "</div>" +
+                                "<div class='row'>" +
+                                    "<div class='col-sm-12'>" +
+                                        "<button class='btn btn-outline-secondary disabled' id='submitFeedback' disabled>Submit</button>" +
+                                    "</div>" +
+                                "</div>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>");
+
+                feedBackGiverCard.find("#star-rating").change(function () {
+                    if($(this).val() !== 0) {
+                        feedBackGiverCard.find("#description").removeAttr("disabled");
+                        feedBackGiverCard.find("#submitFeedback").removeAttr("disabled");
+                        feedBackGiverCard.find("#submitFeedback").removeClass("disabled");
+                    }
+                    else {
+                        feedBackGiverCard.find("#description").attr("disabled", true);
+                        feedBackGiverCard.find("#submitFeedback").attr("disabled", true);
+                        feedBackGiverCard.find("#submitFeedback").addClass("disabled");
+                    }
+                });
+
+                feedBackGiverCard.find("#submitFeedback").click(function () {
+                    $.ajax({
+                        url: CUSTOMER_ORDER_URL,
+                        method: "POST",
+                        data: {
+                            reqtype: "give-feedback-to-store",
+                            storeId: oneStoreOrder.storeId,
+                            rate: feedBackGiverCard.find("#star-rating").val(),
+                            description: feedBackGiverCard.find("#description").val()
+                        },
+
+                        success: function (response) {
+                            feedBackGiverCard.hide(400);
+                        }
+                    })
+                });
+
+                feedbackGiverContainer.append(feedBackGiverCard);
+            })
+        }
+    })
+}
+
+$(function () {
+    $("#orderAcceptBtn").click(function () {
+        $.ajax({
+            url: CUSTOMER_ORDER_URL,
+            method: "POST",
+            data: {
+                reqtype: "accept-order"
+            },
+            success: function () {
+                getFeedbackData();
+                $("#order-carousel").carousel(5);
+            }
+        })
+    })
+})
+
+$(function () {
+    $("#feedbackDoneBtn").click(function () {
+        $.ajax({
+            url: CUSTOMER_ORDER_URL,
+            method: "POST",
+            data: {
+                reqtype: "done-feedback"
+            },
+            success: function (response) {
+                location.reload();
+            }
+        })
+    });
+})
+
 //# sourceURL=customerOrder.js

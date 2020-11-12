@@ -4,15 +4,16 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class Offer
 {
+    protected  int offerId;
     protected int itemId;
     protected double Amount;
     protected int forAdditionalPrice;
     //noy 11/11
-    private  int offerId=0;
+    private static int idCounter=0;
     //noy 11/11
     public Offer()
     {
-        this.offerId++;
+        this.offerId = ++idCounter;
 
     }
 
