@@ -91,7 +91,7 @@ public class Customer extends User //implements Locatable
 
     public void addItemToCurrentOrder(int choosedItemId, double choosedAmountOfItem) throws NegativeAmountOfItemInException
     {
-        this.currentOrder.addItemToOrder(currentOrderZone.getAllItems().get(choosedItemId),choosedAmountOfItem);
+        this.currentOrder.addItemToOrder(currentOrderZone.getItemById(choosedItemId),choosedAmountOfItem);
     }
 
 

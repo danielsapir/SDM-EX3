@@ -5,7 +5,7 @@ import SDM.IfBuy;
 public class IfBuyDTO
 {
     private String itemName;
-    private Double quantity;
+    private double quantity;
 
     public IfBuyDTO(IfBuy ifBuy)
     {

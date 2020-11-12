@@ -65,16 +65,19 @@ $(function () {
 function checkIfStoreLocationIsOk(store) {
     var currentX = parseInt($("#xCorPicker").val());
     var currentY = parseInt($("#yCorPicker").val());
-    if(store.location.location.x === currentX && store.location.location.y === currentY){
-        $("#deliveryPriceHolder").text("You cant choose location of existing store").addClass("errorText");
-        $("#firstStepBtn").attr("disabled","disabled");
-        return false;
+    for(let i=0; i<fetchedStores.length; i++) {
+        if(fetchedStores[i].location.location.x === currentX && fetchedStores[i].location.location.y === currentY) {
+            $("#deliveryPriceHolder").text("");
+            $("#locationErrorPlaceHolder").text("You cant choose location of existing store").addClass("errorText");
+            $("#firstStepBtn").attr("disabled", "disabled");
+            return false;
+        }
     }
-    else {
-        $("#deliveryPriceHolder").removeClass("errorText");
-        $("#firstStepBtn").removeAttr("disabled","disabled");
-        return true;
-    }
+    $("#locationErrorPlaceHolder").text("").addClass("errorText");
+    $("#deliveryPriceHolder").removeClass("errorText");
+    $("#firstStepBtn").removeAttr("disabled","disabled");
+    return true;
+
 }
 
 function assignDeliveryPrice() {
@@ -210,10 +213,10 @@ function getAllStoreItemData() {
 
                         }
                         if (parseFloat($(this).val()) > 0) {
-                            storeItemCard.addClass("choosed");
+                            storeItemCard.addClass("border-success");
                         }
                         else {
-                            storeItemCard.removeClass("choosed");
+                            storeItemCard.removeClass("border-success");
                         }
                         updateCart(storeItem,parseFloat($(this).val()));
                     })
@@ -224,16 +227,164 @@ function getAllStoreItemData() {
     });
 }
 
+function showDynamicOrderMidOffer() {
+    $.ajax({
+        url: CUSTOMER_ORDER_URL,
+        method: "GET",
+        data: {
+            reqtype: "dynamic-order-mid-info",
+        },
+
+
+        //oneStoreOrders = [{id:2, date:.., customerName:"Mosh", destinationLocation: { location: {x:1,y:2}}, numOfItemsInThisOrder:12, priceOfItemsInThisOrder:123.4
+        //                  deliveryPrice:23.4, storeName:"Rami-Levi", distanceToStore: 42.1, ppk:23, numTypesOfItemsInThisOrder:2, storeLocation:{location{x:2,y:4}}}..]
+        success: function (oneStoreOrders) {
+            let dynamicMidTableBody = $("#dynamic-mid-order-table").find("tbody");
+
+            $.each(oneStoreOrders || [], function (index, oneStoreOrder) {
+                dynamicMidTableBody.append("<tr>" +
+                    "<td>" + oneStoreOrder.id + "</td>" +
+                    "<td>" + oneStoreOrder.storeName + "</td>" +
+                    "<td>(" + oneStoreOrder.storeLocation.location.x + ", " + oneStoreOrder.storeLocation.location.y + ")</td>" +
+                    "<td>" + oneStoreOrder.distanceToStore + "</td>" +
+                    "<td>" + oneStoreOrder.ppk + "</td>" +
+                    "<td>" + oneStoreOrder.deliveryPrice + "</td>" +
+                    "<td>" + oneStoreOrder.numTypesOfItemsInThisOrder + "</td>" +
+                    "<td>" + (oneStoreOrder.priceOfItemsInThisOrder + oneStoreOrder.deliveryPrice)  + "</td>" +
+                    "</tr>");
+            });
+
+            $("#dynamicMidButton").click(function () {
+                showDiscountsOfOrder();
+                $("#order-carousel").carousel("next");
+                return false;
+            });
+        }
+    });
+}
+
+function addDiscountToOrder(discount, offerContainer, discountCard) {
+    let idOfDiscount = discount.discountId;
+    let idOfOffer = 0;
+    if(discount.thenGetDTO.operator === "ONE-OF") {
+        idOfOffer = offerContainer.find("option:selected").val();
+    }
+    $.ajax({
+        url: CUSTOMER_ORDER_URL,
+        method: "POST",
+        data: {
+            reqtype: "add-discount",
+            discountId: idOfDiscount,
+            offerId: idOfOffer
+        },
+        success: function (response) {
+            discountCard.hide(400);
+        }
+    })
+}
+
+function showDiscountsOfOrder() {
+    $.ajax({
+        url: CUSTOMER_ORDER_URL,
+        method: "GET",
+        data: {
+            reqtype: "get-discounts"
+        },
+
+
+        //discounts= [{discountName: "1+1", discountId :3, ifBuyDTO { itemName:"Milk", quantity:2 },
+        //              thenGetDTO {operator:"ONE-OF", offerDTOList: [{offerId: 12, itemId: 4, itemName: "Milk", amount:23.4, forAdditionalPrice:3}..]}
+        success: function (discounts) {
+            let discountContainer = $("#discountContainer");
+            $.each(discounts || [], function (index, discount) {
+                let discountCard = $(
+                    "<div class='card border-dark'>" +
+                        "<div class='card-header row'>" +
+                            "<div class='col-sm-12'>" +
+                                "<p>&#x2B50<strong>" + discount.discountName + "</strong>&#x2B50</p>" +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='card-body text-center'>" +
+                            "<div class='container-fluid'>" +
+                                "<div class='row'>" +
+                                    "<div class='col-sm-12'>" +
+                                        "<p>Because you bought " +  discount.ifBuyDTO.quantity + " " + discount.ifBuyDTO.itemName + "</p>" +
+                                    "</div>" +
+                                "</div>" +
+                                "<div class='row'>" +
+                                    "<div class='col-sm 12'>" +
+                                        "<p>Then you can get " + (discount.thenGetDTO.operator !== "IRRELEVANT" ? discount.thenGetDTO.operator : "")+ "</p>" +
+                                    "</div>" +
+                                "</div>" +
+                                "<div class='row'>" +
+                                    "<div class='col-sm-12'>" +
+                                        "<select class='form-control' id='offers-container' name='offerChoose'>" +
+                                        "</select>" +
+                                    "</div>" +
+                                "</div>" +
+                                "<div class='row invisible' id='forPartOfDiscount'>" +
+                                    "<div class='col-sm-12'>" +
+                                        "<p>for: <span id='totalPricePlaceHolder'></span></p>" +
+                                    "</div>" +
+                                "</div>" +
+                                "<div class='row'>" +
+                                    "<div class='col-sm-12'>" +
+                                        "<button class='btn btn-outline-primary' id='offerChoosedBtn'>I want it!</button>" +
+                                    "</div>" +
+                                "</div>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>");
+
+                let offerContainer = discountCard.find("#offers-container");
+                $.each(discount.thenGetDTO.offerDTOList || [], function (index, offer) {
+                    offerContainer.append("<option value='" + offer.offerId + "'>"+
+                        offer.amount + " " + offer.itemName + (discount.thenGetDTO.operator === "ONE-OF" ? " for " + offer.forAdditionalPrice : "") +
+                        "</option>")
+                });
+                if(discount.thenGetDTO.operator !== "ONE-OF") {
+                    discountCard.find("#forPartOfDiscount").removeClass("invisible");
+                    let totalPrice = 0;
+                    for(let i=0; i<discount.thenGetDTO.offerDTOList.length; i++) {
+                        totalPrice += (discount.thenGetDTO.offerDTOList)[i].forAdditionalPrice;
+                    }
+
+                    discountCard.find("#totalPricePlaceHolder").text(totalPrice);
+                    offerContainer.attr("multiple");
+                    offerContainer.attr("disabled");
+                }
+
+                discountCard.find("#offerChoosedBtn").click(function () {
+                    addDiscountToOrder(discount, offerContainer, discountCard);
+                    return false;
+                });
+
+                discountContainer.append(discountCard);
+
+            })
+        }
+    })
+}
+
 $(function () {
     $("#itemChoiseBtn").click(function () {
         $.ajax({
             url: CUSTOMER_ORDER_URL,
             method: "POST",
             data: {
-                cart: cart
+                reqtype: "add-items-to-order",
+                cart: JSON.stringify(cart)
             },
-            success: function () {
-                $("#order-carousel").carousel("next");
+            success: function (response) {
+
+                if(typeOfOrder === "DYNAMIC") {
+                    showDynamicOrderMidOffer();
+                    $("#order-carousel").carousel(2);
+                }
+                else {
+                    showDiscountsOfOrder();
+                    $("#order-carousel").carousel(3);
+                }
             }
         });
 
@@ -241,4 +392,9 @@ $(function () {
     })
 })
 
+$(function () {
+    $("#discountChoiseBtn").click(function () {
+        //TODO change to summary
+    })
+})
 //# sourceURL=customerOrder.js
