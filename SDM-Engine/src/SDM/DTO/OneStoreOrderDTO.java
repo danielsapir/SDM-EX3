@@ -10,7 +10,7 @@ import java.util.List;
 
 public class OneStoreOrderDTO
 {
- private private int id;
+ private int id;
  private int storeId;
  private Date date;
  private String customerName;
