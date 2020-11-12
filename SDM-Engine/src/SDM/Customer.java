@@ -173,6 +173,14 @@ public class Customer extends User //implements Locatable
         
     }
 
+
+    //noy 12/11
+    public void doneGiveFeedBack()
+    {
+        this.currentOrder=null;
+    }
+
+
     
 
 

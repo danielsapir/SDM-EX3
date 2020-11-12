@@ -271,6 +271,35 @@ public class Zone
 
         return avgPrice;
     }
+
+
+    /*
+    private Owner owner;
+    private int id;
+    private String name;
+    private int deliveryPPK;
+    private Location location;
+    private Map<Integer, StoreItem> itemsThatSellInThisStore=new HashMap<>();
+    private List<OneStoreOrder> orders= new LinkedList<>();
+    private List<Discount> discounts= new LinkedList<>();
+     */
+
+
+    //12/11 NOY
+    public void openNewStore(String newStoreName,Location newStoreLocation, int ppk)
+    {
+        Store store=new Store();
+        store.setOwner(owner);
+
+
+
+
+    }
+
+
+
+
+
 }
 
 
