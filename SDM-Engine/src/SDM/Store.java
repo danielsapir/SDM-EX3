@@ -18,6 +18,11 @@ public class Store implements Locatable
     private List<OneStoreOrder> orders= new LinkedList<>();
     private List<Discount> discounts= new LinkedList<>();
 
+
+
+
+
+
     public Owner getOwner() {
         return owner;
     }

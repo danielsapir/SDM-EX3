@@ -1,9 +1,6 @@
 package SDM.DTO;
 
-import SDM.Location;
-import SDM.Order;
-import SDM.Store;
-import SDM.StoreItem;
+import SDM.*;
 import org.jcp.xml.dsig.internal.dom.DOMUtils;
 
 import java.util.LinkedList;
@@ -20,6 +17,9 @@ public class storeDTO
     private double totalCostOfSoldItems=0;
     private double ppk;
     private double totalCostOfDeliveries;
+    //noy 12/11
+    private List<FeedBack> storeFeedBack=new LinkedList<>();
+
 
     public storeDTO(Store store)
     {
@@ -42,6 +42,12 @@ public class storeDTO
         {
             this.totalCostOfSoldItems+=order.getPriceOfAllItems();
 
+        }
+
+        //noy 12/11
+        for (OneStoreOrder orders:store.getOrders())
+        {
+            storeFeedBack.add(orders.getFeedBack());
         }
     }
 }
