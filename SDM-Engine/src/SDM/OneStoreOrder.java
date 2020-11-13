@@ -9,7 +9,6 @@ public class OneStoreOrder extends Order {
     private final Store storeOrderMadeFrom;
     private boolean partOfDynamicOrder = false;
     private DynamicOrder dynamicOrder;
-
     //noy 10/11
     private FeedBack feedBack;
 

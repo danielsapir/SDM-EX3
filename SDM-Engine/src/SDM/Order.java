@@ -8,8 +8,8 @@ public abstract class Order
 {
     private static int idCounter = 1;
     protected final int id;
-    protected final Map<Integer, OrderItem> orderItemCart;
-    protected final Map<Integer, OrderItem> itemsBoughtWithDiscount;
+    protected final Map<Integer, OrderItem> orderItemCart=new HashMap<>();
+    protected final Map<Integer, OrderItem> itemsBoughtWithDiscount=new HashMap<>();
     protected final LinkedList<Discount> discountsAvailable;
     protected final Customer customer;
     protected final Date date;
@@ -24,8 +24,8 @@ public abstract class Order
         this.date = date;
         this.id = idCounter;
         this.destinationLocation = destinationLocation;
-        orderItemCart = new HashMap<>();
-        itemsBoughtWithDiscount = new HashMap<>();
+        //orderItemCart = new HashMap<>();
+        //itemsBoughtWithDiscount = new HashMap<>();
         discountsAvailable = new LinkedList<>();
     }
 

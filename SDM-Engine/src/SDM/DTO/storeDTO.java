@@ -20,6 +20,10 @@ public class storeDTO
     //noy 12/11
     private List<FeedBack> storeFeedBack=new LinkedList<>();
 
+    //noy 12/11
+    private List<OneStoreOrderDTO> ordersOfStore=new LinkedList<>();
+
+
 
     public storeDTO(Store store)
     {
@@ -48,6 +52,13 @@ public class storeDTO
         for (OneStoreOrder orders:store.getOrders())
         {
             storeFeedBack.add(orders.getFeedBack());
+        }
+
+        //NOY 12/11
+        for (OneStoreOrder oneStoreOrder:store.getOrders())
+        {
+            OneStoreOrderDTO oneStoreOrderDTO=new OneStoreOrderDTO(oneStoreOrder);
+            this.ordersOfStore.add(oneStoreOrderDTO);
         }
     }
 }

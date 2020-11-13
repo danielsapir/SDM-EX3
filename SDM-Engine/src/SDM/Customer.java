@@ -180,6 +180,22 @@ public class Customer extends User //implements Locatable
         this.currentOrder=null;
     }
 
+    //noy 12/11
+    //get zone and return all orders by this customer in the given zone
+    public List<Order> getAllOrdersOfThisCustomerInSpecificZone(Zone zone)
+    {
+        List<Order> ordersList=new LinkedList<>();
+
+        for (Order order:zone.getAllOrders())
+        {
+            if(order.getCustomer().getId()==this.id)
+            {
+                ordersList.add(order);
+            }
+        }
+        return (ordersList);
+    }
+
 
     
 
