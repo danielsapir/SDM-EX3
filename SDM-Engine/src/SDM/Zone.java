@@ -271,30 +271,43 @@ public class Zone
 
         return avgPrice;
     }
+    
 
-
-    /*
-    private Owner owner;
-    private int id;
-    private String name;
-    private int deliveryPPK;
-    private Location location;
-    private Map<Integer, StoreItem> itemsThatSellInThisStore=new HashMap<>();
-    private List<OneStoreOrder> orders= new LinkedList<>();
-    private List<Discount> discounts= new LinkedList<>();
-     */
-
-
-    //12/11 NOY
-    public void openNewStore(String newStoreName,Location newStoreLocation, int ppk)
+    //13/11 NOY
+    public Store openNewStore(String newStoreName,Location newStoreLocation, int ppk)
     {
         Store store=new Store();
+        store.setId(this.getUniqueStoreId());
         store.setOwner(owner);
-
-
-
-
+        store.setName(newStoreName);
+        store.setLocation(newStoreLocation);
+        store.setDeliveryPPK(ppk);
+        return(store);
     }
+
+    //13/11 NOY
+    private int getUniqueStoreId()
+    {
+        int maxId=1;
+        for (Store st:this.allStores.values())
+        {
+            if(st.getId()>=maxId)
+            {
+                maxId=st.getId();
+            }
+        }
+        return (++maxId);
+    }
+
+    //13/11 NOY
+    public void addItemToStoreHelper(int itemId,double price,Store store)
+    {
+        Item item=this.allItems.get(itemId);
+        String priceSt= String.valueOf(price);
+        store.addNewItem(item,priceSt);
+    }
+
+
 
 
 
