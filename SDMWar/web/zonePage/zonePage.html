@@ -16,6 +16,7 @@
     <script src="../common/modalFixer.js"></script>
     <script src="../common/stringUtils.js"></script>
     <script src="zonePage.js"></script>
+    <script src="../common/dateUtil.js"></script>
 
 </head>
 <body>
@@ -103,8 +104,25 @@
         </table>
     </div>
     <div class="row owner-only">
-
+        <div class="col-sm-12">
+        <button type="button" class="btn btn-outline-info" data-toggle="collapse" data-target="#feedbackPlaceHolder">See all feedbacks you got about stores you own in this zone!</button>
+            <div id="feedbackPlaceHolder" class="collapse">
+                <table id="feedback-table" class="table table-hover col-sm-12">
+                    <thead>
+                    <tr class="d-flex">
+                        <th class="col-3">Customer name</th>
+                        <th class="col-2">Date</th>
+                        <th class="col-2">Rating</th>
+                        <th class="col-5">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
 </div>
 
 </body>

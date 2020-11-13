@@ -32,7 +32,7 @@ function updateOrdersInfo() {
             $.each(orders || [], function(index, order) {
                 let customerOrderRow = $("<tr>" +
                     "<td>" + order.id + "</td>" +
-                    "<td>" + order.date + "</td>" +
+                    "<td>" + fixDate(order.date) + "</td>" +
                     "<td>(" + order.orderDestination.location.x + ", " + order.orderDestination.location.y + ")</td>" +
                     "<td>" + order.numOfStoresInThisOrder + "</td>" +
                     "<td>" + order.numOfItemsInThisOrder + "</td>" +

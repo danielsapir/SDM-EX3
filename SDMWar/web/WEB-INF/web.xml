@@ -23,6 +23,10 @@
         <servlet-name>CustomerOrder</servlet-name>
         <servlet-class>servlets.CustomerOrderServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OwnerZoneInfoServlet</servlet-name>
+        <servlet-class>servlets.OwnerZoneInfoServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -42,5 +46,9 @@
     <servlet-mapping>
         <servlet-name>CustomerOrder</servlet-name>
         <url-pattern>/customerorder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OwnerZoneInfoServlet</servlet-name>
+        <url-pattern>/ownerzoneinfo</url-pattern>
     </servlet-mapping>
 </web-app>

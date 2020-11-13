@@ -125,9 +125,10 @@ function updateTransactions() {
             transactionsTableBody.empty();
 
             $.each(transactions || [], function (index, transaction) {
+
                 transactionsTableBody.append("<tr>" +
                     "<td>" + capitalFirst(decamelize(transaction.type, " "), true) +  "</td>" +
-                    "<td>" + transaction.date + "</td>" +
+                    "<td>" + fixDate(transaction.date) + "</td>" +
                     "<td>" + transaction.amountOfAction.toFixed(2) + "</td>" +
                     "<td>" + transaction.amountBeforeOperation.toFixed(2) + "</td>" +
                     "<td>" + transaction.amountAfterOperation.toFixed(2) + "</td>" +
