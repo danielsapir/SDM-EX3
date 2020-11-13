@@ -1,6 +1,10 @@
 package SDM;
 
+import javafx.collections.transformation.FilteredList;
+
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 //TODO
@@ -23,6 +27,32 @@ public class Owner extends User
             this.stores.put(st.getId(),st);
         }
     }
+
+    //noy 12/11
+    public Map<Integer, Store> getOwnerStores()
+    {
+        return stores;
+    }
+
+
+    //noy 12/11
+    public List<FeedBack> feedBacksOfOwnerInTheZone(Zone zone)
+    {
+        List<FeedBack> feedBacks=new LinkedList<>();
+        for (Store store:zone.getAllStores())
+        {
+            if(store.getOwner().getName().equals(this.name))
+            {
+                for (OneStoreOrder oneStoreOrder:store.getOrders())
+                {
+                    feedBacks.add(oneStoreOrder.getFeedBack());
+                }
+            }
+        }
+        return (feedBacks);
+    }
+
+
 }
 
 

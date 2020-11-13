@@ -56,7 +56,7 @@ public class UserManager
 
         for (User user:users)
         {
-            if(user.getName().equals(userName))
+            if(user.getName().toLowerCase().equals(userName.toLowerCase()))
             {
                 flagIsUserExist=true;
             }

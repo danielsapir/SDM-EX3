@@ -6,7 +6,8 @@ import java.util.*;
 
 public class DynamicOrder extends Order{
 
-    private class DynamicOrderItem {
+    private class DynamicOrderItem
+    {
         Item itemInOrder;
         double amountOfItem;
 
@@ -51,8 +52,25 @@ public class DynamicOrder extends Order{
         }
 
         priceOfAllItems = calculatePriceOfOrderItems();
+        calculateDeliveryPrice();
         totalPrice = priceOfAllItems + deliveryPrice;
         customer.addOrder(this);
+
+        //noy 12/11
+        //update father Order properties: "itemsBoughtInDiscount", "orderItemCart".
+        for (OneStoreOrder oneStoreOrder:this.innerOneStoreOrderMap.values())
+        {
+            for (OrderItem orderItem:oneStoreOrder.getItemsBoughtWithDiscount().values())
+            {
+                this.itemsBoughtWithDiscount.put(orderItem.getItemInOrder().getItem().getId(),orderItem);
+            }
+
+            for (OrderItem orderItem: oneStoreOrder.getOrderItemCart().values())
+            {
+                this.orderItemCart.put(orderItem.getItemInOrder().getItem().getId(), orderItem);
+            }
+
+        }
     }
 
     //Greedy algorithm
