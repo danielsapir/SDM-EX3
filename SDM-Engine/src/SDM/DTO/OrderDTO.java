@@ -39,5 +39,11 @@ public class OrderDTO
             OrderItemDTO orderItemDTO=new OrderItemDTO(orderItem);
             itemsInThisOrder.add(orderItemDTO);
         }
+
+        for (OrderItem orderItem:order.getItemsBoughtWithDiscount().values())
+        {
+            OrderItemDTO orderItemDTO=new OrderItemDTO(orderItem);
+            itemsInThisOrder.add(orderItemDTO);
+        }
     }
 }

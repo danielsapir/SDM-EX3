@@ -46,12 +46,13 @@ public class CustomerZoneInfoServlet extends HttpServlet {
 
         switch (reqType) {
             case ALL_CUSTOMER_ORDERS:
-                LinkedList<OrderDTO> orderDTOs = new LinkedList<>();
-                for(Order order : customer.getAllOrders()) {
-                    orderDTOs.add(new OrderDTO(order));
+                synchronized (customer) {
+                    LinkedList<OrderDTO> orderDTOs = new LinkedList<>();
+                    for (Order order : customer.getAllOrders()) { //TODO get all orders of this zone
+                        orderDTOs.add(new OrderDTO(order));
+                    }
+                    jsonRes = gson.toJson(orderDTOs);
                 }
-
-                jsonRes = gson.toJson(orderDTOs);
                 break;
         }
 

@@ -100,7 +100,7 @@ function updateMoneyAmount() {
         },
 
         success: function (amount) {
-            $("#moneyPlaceHolder").text(amount);
+            $("#moneyPlaceHolder").text(amount.toFixed(2));
         },
         error: function () {
 

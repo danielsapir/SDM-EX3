@@ -2,6 +2,8 @@ var ZONE_PAGE_URL = buildUrlWithContextPath("zonepage");
 var DASHBOARD_URL = buildUrlWithContextPath("dashboard");
 var userType;
 var fetchedStores;
+var ownerScriptIsLoaded = false;
+var userName;
 
 $(function () {
     $.ajax({
@@ -15,6 +17,7 @@ $(function () {
         success: function (user) {
             $("#user-name-placeholder").text(user.userName);
             userType = user.userType;
+            userName = user.userName;
             if(user.userType === "OWNER") {
                 $(".customer-only").remove();
             }
@@ -125,7 +128,7 @@ function updateStoresInfo() {
             storesTableBody.empty();
 
             $.each(stores || [], function(index, store) {
-                storesTableBody.append("<tr>" +
+                let storeTableRow = $("<tr>" +
                 "<td>" + store.id + "</td>" +
                 "<td>" + store.name + "</td>" +
                 "<td>" + store.ownerName + "</td>" +
@@ -136,9 +139,12 @@ function updateStoresInfo() {
                 "<td>" + store.ppk +"</td>" +
                 "<td>" + store.totalCostOfDeliveries.toFixed(2) +"</td>" +
                 "</tr>");
-                
+                storesTableBody.append(storeTableRow);
                 createStoreItemShowerButton(store).appendTo($("#itemsButton" + index));
 
+                if((userType === "OWNER") && ownerScriptIsLoaded && (userName === store.ownerName)) {
+                    addOrderToThisStoreRow(storeTableRow, store);
+                }
             })
         }
     })
@@ -149,8 +155,9 @@ $(setInterval(updateStoresInfo, 1000));
 function getScriptsFromServer() {
     if(userType !== undefined) {
         $.ajaxSetup({cache: true});
-        if (userType === "OWNER") {
-
+        if (userType === "OWNER") { //TODO owner stuff - show store owned, show feedback and open new store
+            $.getScript(buildUrlWithContextPath("zonePage/ownerInfo.js"));
+            ownerScriptIsLoaded = true;
         } else {
             $.getScript(buildUrlWithContextPath("zonePage/customerInfo.js"));
         }
