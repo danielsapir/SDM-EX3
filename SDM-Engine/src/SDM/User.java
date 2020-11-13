@@ -5,6 +5,7 @@ import com.sun.deploy.security.ValidationState;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class User
 {
@@ -31,7 +32,7 @@ public class User
     protected String name;
     protected int id;
     protected MoneyAccount moneyAccount;
-    protected PriorityQueue<Notification> notificationsQueue = new PriorityQueue<Notification>();
+    protected Queue<Notification> notificationsQueue = new LinkedList<Notification>();
     private static int  idCounter=0;
 
 
@@ -66,7 +67,7 @@ public class User
 
     public synchronized List getAndRemoveAllNotifications()
     {
-        List<Notification>notificationsList=new LinkedList<>();
+        List<Notification> notificationsList=new LinkedList<>();
 
         while(!(this.notificationsQueue.isEmpty()))
         {

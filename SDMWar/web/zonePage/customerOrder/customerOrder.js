@@ -515,38 +515,28 @@ function getFeedbackData() {
                             "<div class='container-fluid'>" +
                                 "<div class='row'>" +
                                     "<div class='col-sm-12'>" +
-                                        "<input id='star-rating' class='rating rating-loading' value='0' data-min='0' data-max='5' data-step='1' data-size='md'>" +
+                                        "<div class=\"rate\">\n" +
+                                            "<label for='rating'>Rating: </label>" +
+                                            "<input type='number' class='form-control' id='rating' value='1' min='1' max='5' step='1' onkeydown='return false'>" +
+                                        "</div>" +
                                     "</div>" +
                                 "</div>" +
                                 "<div class='row'>" +
                                     "<div class='col-sm 12'>" +
                                         "<div class='form-group'>" +
                                             "<label for='description'>Description: </label>" +
-                                            "<textarea class='form-control' rows='4' id='description' disabled></textarea>" +
+                                            "<textarea class='form-control' rows='4' id='description' ></textarea>" +
                                         "</div>" +
                                     "</div>" +
                                 "</div>" +
                                 "<div class='row'>" +
                                     "<div class='col-sm-12'>" +
-                                        "<button class='btn btn-outline-secondary disabled' id='submitFeedback' disabled>Submit</button>" +
+                                        "<button class='btn btn-outline-secondary' id='submitFeedback' >Submit</button>" +
                                     "</div>" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
                     "</div>");
-
-                feedBackGiverCard.find("#star-rating").change(function () {
-                    if($(this).val() !== 0) {
-                        feedBackGiverCard.find("#description").removeAttr("disabled");
-                        feedBackGiverCard.find("#submitFeedback").removeAttr("disabled");
-                        feedBackGiverCard.find("#submitFeedback").removeClass("disabled");
-                    }
-                    else {
-                        feedBackGiverCard.find("#description").attr("disabled", true);
-                        feedBackGiverCard.find("#submitFeedback").attr("disabled", true);
-                        feedBackGiverCard.find("#submitFeedback").addClass("disabled");
-                    }
-                });
 
                 feedBackGiverCard.find("#submitFeedback").click(function () {
                     $.ajax({
@@ -555,7 +545,7 @@ function getFeedbackData() {
                         data: {
                             reqtype: "give-feedback-to-store",
                             storeId: oneStoreOrder.storeId,
-                            rate: feedBackGiverCard.find("#star-rating").val(),
+                            rate: feedBackGiverCard.find("#rating").val(),
                             description: feedBackGiverCard.find("#description").val()
                         },
 

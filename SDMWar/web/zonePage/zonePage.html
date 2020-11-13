@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="zonePage.css">
     <link rel="stylesheet" href="inputDes.css">
     <link rel="stylesheet" href="customerOrder/carouselDes.css">
+    <link rel="stylesheet" href="ratingDes.css">
     <script src="../jquery-3.5.1.min.js"></script>
     <script src="../popper.min.js"></script>
     <script src="../bootstrap.min.js"></script>
@@ -47,7 +48,7 @@
     </div>
     <div class="row">
         <h5 class="col-sm-12">
-            All the stores selling in this zone: <small class="text-muted">Click on the store to get information about it items</small>
+            All the stores selling in this zone: <span class="owner-only" style="color:green">The store you own in this zone will be in green color</span>
         </h5>
     </div>
     <div class="row">
@@ -83,8 +84,8 @@
             All the orders you made in this zone: <small class="text-muted">Click on the order to get information about it items</small>
         </h5>
     </div>
-    <div class="row">
-        <table id="customer-orders-table" class="table table-hover col-sm-12 customer-only">
+    <div class="row  customer-only">
+        <table id="customer-orders-table" class="table table-hover col-sm-12">
             <thead>
             <tr>
                 <th>Order ID</th>
@@ -100,6 +101,9 @@
             <tbody>
             </tbody>
         </table>
+    </div>
+    <div class="row owner-only">
+
     </div>
 </div>
 

@@ -49,11 +49,11 @@ function updateOrdersInfo() {
                         "                <th>Item ID</th>\n" +
                         "                <th>Item name</th>\n" +
                         "                <th>Weight/Quantity</th>\n" +
-                        "                <th>Store ID - Store name</th>\n" +
+                        "                <th>Store ID - name</th>\n" +
                         "                <th>Number of units</th>\n" +
                         "                <th>Price for unit</th>\n" +
                         "                <th>Total price</th>\n" +
-                        "                <th>Discount price?</th>\n" +
+                        "                <th>Discounted price?</th>\n" +
                         "            </tr>\n" +
                         "            </thead>\n" +
                         "            <tbody>\n" +
@@ -63,15 +63,16 @@ function updateOrdersInfo() {
 
                     //orderItem = {id: 12, name:"Banana", type: "WEIGHT"/"QUANTITY", storeName: "Hazi-Hinam", storeId: 32,
                     //              amount: 23.4, pricePerOne: 23, isPartOfDiscount: true/false}
-                    $.each(order.itemsThatSellInThisStore || [], function (index, orderItem) {
+                    $.each(order.itemsInThisOrder || [], function (index, orderItem) {
                         orderItemsTableHtml.find("tbody").append("<tr>" +
                             "<td>" + orderItem.id + "</td>" +
                             "<td>" + orderItem.name + "</td>" +
                             "<td>" + capitalFirst(orderItem.type, true) + "</td>" +
-                            "<td>" + orderItem.amount + "-" + orderItem.storeName + "</td>" +
+                            "<td>" + orderItem.storeId + "-" + orderItem.storeName + "</td>" +
+                            "<td>" + orderItem.amount.toFixed(2) + "</td>" +
                             "<td>" + orderItem.pricePerOne + "</td>" +
                             "<td>" + ((orderItem.pricePerOne*orderItem.amount).toFixed(2)) + "</td>" +
-                            "<td>" + (orderItem.isPartOfDiscount ? "Yes :)" : "No :(") + "</td>" +
+                            "<td>" + (orderItem.isPartOfDiscount ? "Yes &#128516" : "No &#128549") + "</td>" +
                             "</tr>")
 
                     })
