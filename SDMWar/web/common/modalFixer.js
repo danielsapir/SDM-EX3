@@ -1,6 +1,6 @@
 function showModal(head, body) {
     var popUp = $("<div id=\"modalPopUp\" class=\"modal fade\" role=\"dialog\">\n" +
-        "        <div class=\"modal-dialog\">\n" +
+        "        <div class=\"modal-dialog modal-xl\">\n" +
         "\n" +
         "            <!-- Modal content-->\n" +
         "            <div class=\"modal-content\">\n" +
@@ -9,7 +9,7 @@ function showModal(head, body) {
         "                    <h4 class=\"modal-title text-left\" id=\"modal-title-head\">"+ head + "</h4>\n" +
         "                </div>\n" +
         "                <div class=\"modal-body\">\n" +
-        "                    <p class=\"modal-body\">" + body + "</p>\n" +
+        "                    <div class=\"modal-body\">" + body + "</div>\n" +
         "                </div>\n" +
         "                <div class=\"modal-footer\">\n" +
         "                    <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">OK</button>\n" +
