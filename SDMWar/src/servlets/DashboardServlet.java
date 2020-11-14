@@ -50,8 +50,10 @@ public class DashboardServlet extends HttpServlet {
         String reqType = req.getParameter(Constants.REQTYPE);
         String userName = SessionUtils.getUsername(req);
         User user = userManager.getUserByName(userName);
-
-        String response = handleGetRequestType(reqType, user, req);
+        String response = null;
+        if(user != null) {
+            response = handleGetRequestType(reqType, user, req);
+        }
 
         try(PrintWriter out = resp.getWriter()) {
             out.println(response);
@@ -164,6 +166,12 @@ public class DashboardServlet extends HttpServlet {
         return response;
     }
 
+    private void depositMoneyToUser(User user, double amountToDeposit, Date dateOfDeposit) {
+        synchronized (user) {
+            user.getMoneyAccount().LoadingMoneyInMyAccount(amountToDeposit, dateOfDeposit);
+        }
+    }
+
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
@@ -183,6 +191,8 @@ public class DashboardServlet extends HttpServlet {
     }
 
     private String handleFileUpload(User user, HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        Gson gson = new Gson();
+        String jsonRes = null;
 
         Collection<Part> parts = req.getParts();
 
@@ -194,16 +204,17 @@ public class DashboardServlet extends HttpServlet {
         }
 
         if(!(user.getType() == User.Type.OWNER)){
-            return "You are not allowed to upload XML files to the system! Only Owner can";
+            return gson.toJson(new xmlLoadingResponse(false,"You are not allowed to upload XML files to the system! Only Owner can"));
         }
 
         try {
             ServletUtils.getSDMEngine(getServletContext()).loadXMLToZone(fileContent.toString(), (Owner)user);
+            jsonRes = gson.toJson(new xmlLoadingResponse(true,""));
         } catch (Exception ex) {
-            resp.sendError(400,makeErrorMessageOutOfException(ex));
+            jsonRes = gson.toJson(new xmlLoadingResponse(false,makeErrorMessageOutOfException(ex)));
         }
 
-        return null;
+        return jsonRes;
     }
 
     private String makeErrorMessageOutOfException(Exception ex) {
@@ -212,17 +223,17 @@ public class DashboardServlet extends HttpServlet {
         if (ex instanceof FileNotFoundException) {
             errorMsg =("\nERROR: The file does not exist in the path given, please try again.");
         } else if (ex instanceof FileNotEndWithXMLException) {
-            errorMsg =("\nERROR: The file you given extension is" + ((FileNotEndWithXMLException) ex).getFileType() + " and not an XML file, please make sure it ends with .xml and try again.");
+            errorMsg =("\nERROR: The file you given extension is " + ((FileNotEndWithXMLException) ex).getFileType() + " and not an XML file, please make sure it ends with .xml and try again.");
         } else if (ex instanceof LocationIsOutOfBorderException) {
             errorMsg =("\nERROR: The object of type " + ((LocationIsOutOfBorderException) ex).getLocatableType() +
                     " with id of: " + ((LocationIsOutOfBorderException) ex).getId() + " is located out of allowed borders which are between "
-                    + ((LocationIsOutOfBorderException) ex).getMinBorder() + "to " + ((LocationIsOutOfBorderException) ex).getMaxBorder() + ".Please fix this.");
+                    + ((LocationIsOutOfBorderException) ex).getMinBorder() + " to " + ((LocationIsOutOfBorderException) ex).getMaxBorder() + ". Please fix this.");
         } else if (ex instanceof DuplicateStoreItemException) {
             errorMsg =("\nERROR: The store item with ID of " + ((DuplicateStoreItemException) ex).getId() + " appears more than once in the XML file.");
         } else if (ex instanceof DuplicateItemException) {
             errorMsg =("\nERROR: The item with ID of " + ((DuplicateItemException) ex).getId() + " appears more than once in the XML file.");
         } else if (ex instanceof TryingToGiveDifferentPricesForSameStoreItemException) {
-            errorMsg =("\nERROR: The file has store with ID" + ((TryingToGiveDifferentPricesForSameStoreItemException) ex).getStoreId() + "that try to give an item price multiple time. ");
+            errorMsg =("\nERROR: The file has store with ID " + ((TryingToGiveDifferentPricesForSameStoreItemException) ex).getStoreId() + " that try to give an item price multiple time. ");
         } else if (ex instanceof TryingToGivePriceOfItemWhichIDNotExistException) {
             errorMsg =("\nERROR: The file has store which trying to give a price of item which is ID " + ((TryingToGivePriceOfItemWhichIDNotExistException)ex).getId() + " does not exist");
         } else if (ex instanceof DuplicateStoreIDException) {
@@ -237,8 +248,10 @@ public class DashboardServlet extends HttpServlet {
             errorMsg =("\nERROR: There are more than one object in the location of " + ((DuplicatedLocationException) ex).getDuplicateLocation().toString());
         }else if(ex instanceof DiscountWithItemNotSoldByStoreException) {
             errorMsg =("\nERROR: There is a discount of store " + ((DiscountWithItemNotSoldByStoreException)ex).getStoreWithDiscount().getName() +
-                    "that try to have an Item with ID of " +
+                    " that try to have an Item with ID of " +
                     ((DiscountWithItemNotSoldByStoreException) ex).getIdOfItemInDiscount() + " that this store doesnt sell");
+        }else if(ex instanceof DuplicateZoneNameException) {
+            errorMsg =("\nERROR: Your are trying to load zone " + ((DuplicateZoneNameException) ex).getZoneName() + " which already exists");
         }else {
             errorMsg =("\nERROR: Unknown error has happen, the error message is: " + ex.getMessage());
         }
@@ -250,9 +263,14 @@ public class DashboardServlet extends HttpServlet {
         return new Scanner(inputStream).useDelimiter("\\Z").next();
     }
 
-    private void depositMoneyToUser(User user, double amountToDeposit, Date dateOfDeposit) {
-        synchronized (user) {
-            user.getMoneyAccount().LoadingMoneyInMyAccount(amountToDeposit, dateOfDeposit);
+    private static class xmlLoadingResponse {
+        private boolean succeeded;
+        private String message;
+
+        public xmlLoadingResponse(boolean succeeded, String message) {
+            this.succeeded = succeeded;
+            this.message = message;
         }
     }
+
 }

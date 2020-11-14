@@ -237,7 +237,9 @@ public class CustomerOrderServlet extends HttpServlet {
         ItemIdAndAmountData[] itemIdAndAmountDataArr = gson.fromJson(itemsAndAmountStr, ItemIdAndAmountData[].class);
         for(ItemIdAndAmountData itemIdAndAmountData : itemIdAndAmountDataArr) {
             try {
-                customer.addItemToCurrentOrder(itemIdAndAmountData.getId(), itemIdAndAmountData.getAmount());
+                if(itemIdAndAmountData.getAmount() > 0) {
+                    customer.addItemToCurrentOrder(itemIdAndAmountData.getId(), itemIdAndAmountData.getAmount());
+                }
             } catch (NegativeAmountOfItemInException ignored) { }
         }
         try {

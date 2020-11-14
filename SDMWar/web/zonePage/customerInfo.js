@@ -1,5 +1,5 @@
 var CUSTOMER_ZONE_INFO_URL = buildUrlWithContextPath("customerzoneinfo");
-var html
+
 $(function () {
     $("#orderButton").click(function () {
         $(this).addClass("disabled");
