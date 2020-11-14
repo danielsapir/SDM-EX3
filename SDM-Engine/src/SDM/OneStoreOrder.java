@@ -72,12 +72,14 @@ public class OneStoreOrder extends Order {
         totalPrice = priceOfAllItems + deliveryPrice;
 
         //noy 9/11
-        //*****************
-        //לאחר שבוצעה הזמנה מוסיפים לבעל החנות את סכום ההזמנה
-        //נוטיפיקיישן לבעל החנות. התקבלה הזמנה חדשה
         this.storeOrderMadeFrom.getOwner().moneyAccount.receiveMoney(totalPrice,this.date);
+
+        //noy 13/11
+        this.giveNewOrderNotification();
+        /*
         Notification notification=new Notification(Notification.Type.NewOrder,"A new order has been received ");
         this.storeOrderMadeFrom.getOwner().addNotification(notification);
+         */
 
         orderItemCart.forEach((orderItemID, orderItem) -> {
             try {
@@ -105,16 +107,21 @@ public class OneStoreOrder extends Order {
 
     }
 
+
+
     void addNewFeedBack(int rate,String description)
     {
         this.feedBack=new FeedBack(this.customer.name, this.date,rate,description);
 
         //notification to store owner about new feedBack
+        this.giveFeedBackNotification();
+        /*
+        String message=String.format("%s rate you %d", this.getCustomer().getName(),rate);
         Notification notification=new Notification(Notification.Type.Feedback, "your store get feedBacK from Customer");
         this.storeOrderMadeFrom.getOwner().addNotification(notification);
+
+         */
     }
-
-
 
 
     @Override
@@ -237,6 +244,37 @@ public class OneStoreOrder extends Order {
             itemsBoughtWithDiscount.put(itemChosen.getItem().getId(), newItemInOrder);
         }
     }
+
+    //noy 13/11
+    private void giveNewOrderNotification()
+    {
+        String message= String.format
+                ("Customer %s made an order ,from store you own: %s , wich cost: %f",this.getCustomer().getName(),this.getStoreOrderMadeFrom().getName(),this.getTotalPrice() );
+
+        Notification notification=new Notification(Notification.Type.NewOrder,message);
+        this.storeOrderMadeFrom.getOwner().addNotification(notification);
+    }
+
+    //noy 13/11
+    private void giveFeedBackNotification()
+    {
+        String message;
+        if(this.getFeedBack().getDescription().equals(""))
+        {
+            message=String.format
+                    ("%s rate you %d", this.getCustomer().getName(),this.getFeedBack().getRate());
+        }
+        else
+        {
+            message=String.format
+                    ("%s rate you %d and get description %s", this.getCustomer().getName(),this.getFeedBack().getRate(), this.getFeedBack().getDescription());
+
+        }
+
+        Notification notification=new Notification(Notification.Type.Feedback, message);
+        this.storeOrderMadeFrom.getOwner().addNotification(notification);
+    }
+
 
 
 

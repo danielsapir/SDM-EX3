@@ -17,6 +17,13 @@ public class FeedBack
 
     }
 
+    public int getRate() {
+        return rate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
     /*
     public FeedBack(String customerName, Date date, int rate)
     {
