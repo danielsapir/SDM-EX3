@@ -249,7 +249,7 @@ public class OneStoreOrder extends Order {
     private void giveNewOrderNotification()
     {
         String message= String.format
-                ("Customer %s made an order ,from store you own: %s , wich cost: %f",this.getCustomer().getName(),this.getStoreOrderMadeFrom().getName(),this.getTotalPrice() );
+                ("Customer %s made an order ,from store you own: %s , wich cost: %.2f",this.getCustomer().getName(),this.getStoreOrderMadeFrom().getName(),this.getTotalPrice() );
 
         Notification notification=new Notification(Notification.Type.NewOrder,message);
         this.storeOrderMadeFrom.getOwner().addNotification(notification);
@@ -267,15 +267,13 @@ public class OneStoreOrder extends Order {
         else
         {
             message=String.format
-                    ("%s rate you %d and get description %s", this.getCustomer().getName(),this.getFeedBack().getRate(), this.getFeedBack().getDescription());
+                    ("%s rate you %d and gave description:'%s'", this.getCustomer().getName(),this.getFeedBack().getRate(), this.getFeedBack().getDescription());
 
         }
 
         Notification notification=new Notification(Notification.Type.Feedback, message);
         this.storeOrderMadeFrom.getOwner().addNotification(notification);
     }
-
-
 
 
 }
