@@ -1,5 +1,7 @@
 var OPEN_STORE_URL = buildUrlWithContextPath("opennewstore");
 var itemsForNewStore = [];
+var storeNameInputIsOk = false;
+var storeLocationInputIsOk = false;
 
 class ItemForNewStore {
     constructor(id, price) {
@@ -9,7 +11,7 @@ class ItemForNewStore {
 }
 
 $(function () {
-    $("#order-carousel").carousel({interval: false});
+    $("#open-store-carousel").carousel({interval: false});
 })
 
 $(function () {
@@ -17,27 +19,37 @@ $(function () {
     storeNameInput.change(function () {
         storeNameInput.val($.trim(storeNameInput.val()));
         if(storeNameInput.val().length > 0) {
-            $("#firstStepBtn").removeAttr("disabled");
+            storeNameInputIsOk = true;
         }
         else{
             $("#firstStepBtn").attr("disabled", "disabled");
+            storeNameInputIsOk = false;
         }
+
+        tryToEnableFirstContinueBtn();
     })
 })
+
+function tryToEnableFirstContinueBtn() {
+    if(storeLocationInputIsOk && storeNameInputIsOk) {
+        $("#firstStepBtn").removeAttr("disabled");
+    }
+}
 
 function checkIfStoreLocationIsOk() {
     var currentX = parseInt($("#xCorPicker").val());
     var currentY = parseInt($("#yCorPicker").val());
     for(let i=0; i<fetchedStores.length; i++) {
-        if(fetchedStores[i].location.location.x === currentX && fetchedStores[i].location.location.y === currentY) {
+        if((fetchedStores[i].location.location.x === currentX) && (fetchedStores[i].location.location.y === currentY)) {
             $("#firstStepBtn").attr("disabled", "disabled");
-            $("#locationErr").addClass("invisible");
-
+            $("#locationErr").removeClass("invisible");
+            storeLocationInputIsOk = false;
             return false;
         }
     }
-    $("#locationErr").removeClass("invisible");
-    $("#firstStepBtn").removeAttr("disabled","disabled");
+    $("#locationErr").addClass("invisible");
+    storeLocationInputIsOk = true;
+    tryToEnableFirstContinueBtn();
     return true;
 
 }
@@ -45,12 +57,15 @@ function checkIfStoreLocationIsOk() {
 $(function () {
     $("#xCorPicker, #yCorPicker").change(function () {
         checkIfStoreLocationIsOk();
-    })
+    });
+
+    checkIfStoreLocationIsOk();
 })
 
 $(function () {
     $("#firstStepBtn").click(function () {
-        $("#order-carousel").carousel("next");
+        $("#open-store-carousel").carousel("next");
+        return false;
     });
 })
 
@@ -76,7 +91,7 @@ function updateItemForStore(item, price) {
         }
     }
     else {
-        cart.push(new ItemForNewStore(item.id, price));
+        itemsForNewStore.push(new ItemForNewStore(item.id, price));
     }
 }
 
@@ -92,7 +107,7 @@ function createSimpleItemCard(item) {
                 "<div class='col-sm-5'>" +
                     "<p>Price: </p>" +
                 "</div>" +
-                "<div class='col-sm-4'>" +
+                "<div class='col-sm-7'>" +
                     "<input type='text' class='form-control numeric-only' value='0' id='priceInput"  + item.id + "'>" +
                 "</div>" +
             "</div>" +
@@ -164,11 +179,16 @@ $(function () {
                         "    <strong>Error!</strong> Another store is already open in the location you choosed, please try again!.\n" +
                         "  </div>"));
                 }
+                $("#open-store-carousel").carousel("next");
             }
         })
+
+        return false;
     });
 
     $("#openStoreDoneBtn").click(function () {
         location.reload();
     });
 })
+
+//# sourceURL=ownerOpenStore.js

@@ -77,7 +77,7 @@ public class OwnerOpenStoreServlet extends HttpServlet {
         String storeName = req.getParameter(STORE_NAME_PARAM);
         int storePPK = Integer.parseInt(req.getParameter(PPK_PARAM));
 
-        Store newOpenedStore = zone.openNewStore(storeName, storeLocation, storePPK);
+        Store newOpenedStore = zone.openNewStore(storeName, storeLocation, storePPK, owner);
 
         ItemIdAndPriceData[] itemIdAndPriceDataArr = gson.fromJson(req.getParameter(ITEMS_FOR_STORE_PARAM), ItemIdAndPriceData[].class);
 
@@ -86,6 +86,8 @@ public class OwnerOpenStoreServlet extends HttpServlet {
                 newOpenedStore.addNewItem(zone.getItemById(itemIdAndPriceData.getId()), Integer.toString(itemIdAndPriceData.getPrice()));
             }
         }
+
+        zone.finishOpenNewStore(newOpenedStore);
 
         return gson.toJson(new OpenResult(true));
     }

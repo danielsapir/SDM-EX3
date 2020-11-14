@@ -13,6 +13,10 @@ function getOwnerNotifications() {
 
             $.each(notifications || [], function (index, notification) {
                 showModal(decamelize(notification.type, " "),notification.message);
+                try {
+                    document.getElementById("ding").play();
+                }
+                catch (exc) {}
             })
         }
     })

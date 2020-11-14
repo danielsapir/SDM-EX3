@@ -43,7 +43,7 @@ public class OneStoreOrderDTO
         this.storeName=oneStoreOrder.getStoreOrderMadeFrom().getName();
         this.distanceToStore=oneStoreOrder.distanceBetweenCostumerAndStore();
         this.ppk=oneStoreOrder.getStoreOrderMadeFrom().getDeliveryPPK();
-        this.numTypesOfItemsInThisOrder=oneStoreOrder.getTotalItemsInOrder();
+        this.numTypesOfItemsInThisOrder=oneStoreOrder.getNumOfTypesOfItemsInOrder();
         this.storeLocation=oneStoreOrder.getStoreOrderMadeFrom().getLocation();
 
         //noy 12/11

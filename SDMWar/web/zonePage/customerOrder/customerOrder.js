@@ -170,7 +170,7 @@ function updateCart(storeItem, amount) {
 }
 
 function createInputAmountLineToStoreItem(storeItem) {
-    return "<div class='col-sm-4'>" +
+    return "<div class='col-sm-7'>" +
         "<input type='text' class='form-control numeric-only' value='0' id='amountInput"  + storeItem.id + "'>" +
         "</div>";
 }
@@ -296,6 +296,10 @@ function showDiscountsOfOrder() {
         //              thenGetDTO {operator:"ONE-OF", offerDTOList: [{offerId: 12, itemId: 4, itemName: "Milk", amount:23.4, forAdditionalPrice:3}..]}
         success: function (discounts) {
             let discountContainer = $("#discountContainer");
+
+            if(discounts.length === 0) {
+                discountContainer.parent().append("<h4 style='color: darkmagenta'>We are sorry but we don't have any discounts to offer you, maybe next time! &#129310;</h4>")
+            }
             $.each(discounts || [], function (index, discount) {
                 let discountCard = $(
                     "<div class='card border-dark'>" +

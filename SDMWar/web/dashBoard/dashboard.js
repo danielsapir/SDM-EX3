@@ -166,6 +166,18 @@ $(function () {
 })
 
 $(function () {
+    $("#transactionAmountInput").change(function () {
+        if(isNaN($("#transactionAmountInput").val())) {
+            $("#transactionAmountInput").val(0);
+
+        }
+        else {
+            $("#transactionAmountInput").val(Math.abs(parseFloat($("#transactionAmountInput").val())));
+        }
+    });
+})
+
+$(function () {
     var date = new Date();
     var dateStr =date.getFullYear() + "-";
     if((date.getMonth() +1) < 10) {

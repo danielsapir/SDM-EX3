@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="SDMWAR">
+  <artifact type="war" build-on-make="true" name="SDMWAR">
     <output-path>$PROJECT_DIR$/out/artifacts/SDMWAR</output-path>
-    <root id="root">
+    <root id="archive" name="SDMWAR.war">
       <element id="javaee-facet-resources" facet="SDMWar/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -9,6 +9,7 @@
         </element>
         <element id="directory" name="lib">
           <element id="artifact" artifact-name="SDM-EX3:jar" />
+          <element id="library" level="project" name="gson-2.1" />
         </element>
       </element>
     </root>

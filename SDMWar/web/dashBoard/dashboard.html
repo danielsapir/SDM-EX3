@@ -15,7 +15,7 @@
     <script src="../common/dateUtil.js"></script>
     <script src="dashboard.js"></script>
     <script src="../notification/ownerNotifications.js"></script>
-
+    <audio id="ding" src="../common/ding.mp3" type="audio/mpeg"></audio>
 </head>
 <body>
 <div class="container-fluid">
@@ -66,7 +66,7 @@
             <h5>How much do you want to deposit?</h5>
             <form id="deposit-form"><div class="form-group row">
                 <div class="col-sm-2">
-                    <input type="text" value="0" class="form-control" name="depositAmount" alt="deposit amount" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
+                    <input id="transactionAmountInput" type="text" value="0" class="form-control" name="depositAmount" alt="deposit amount">
                 </div>
                 <div class="col-sm-6">
                     <input type="date" class="form-control" name="date" id="date-input">
