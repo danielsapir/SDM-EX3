@@ -307,6 +307,30 @@ public class Zone
         store.addNewItem(item,priceSt);
     }
 
+    //14/11 Noy
+    public void finishOpenNewStore(Store st)
+    {
+        giveOpenNewStoreNotification(st);
+    }
+
+
+
+
+    //noy 14/11
+    private void giveOpenNewStoreNotification(Store store)
+    {
+        String message= String.format
+                ("%s opened a new store named: %s, in yor zone: %s. " +
+                                "/n the store located in:(%d,%d),/n and the store sales %d of %d."
+                        ,store.getOwner().getName(),store.getName(),this.name, store.getLocation().getXLocation(),store.getLocation().getYLocation(),store.getItemsThatSellInThisStore().size(),this.allItems.size() );
+
+        Notification notification=new Notification(Notification.Type.NewStore,message);
+        this.getOwner().addNotification(notification);
+    }
+
+
+
+
 
 
 
