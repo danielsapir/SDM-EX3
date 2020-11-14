@@ -162,7 +162,7 @@ public class Store implements Locatable
         newStoreItem.setItem(item);
         newStoreItem.setPrice(Integer.parseInt(priceSt));
         newStoreItem.setStore(this);
-
+        item.getStoresSellThisItem().put(this.id,this);
         itemsThatSellInThisStore.put(item.getId(),newStoreItem);
 
     }

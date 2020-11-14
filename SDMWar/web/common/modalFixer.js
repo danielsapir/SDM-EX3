@@ -1,3 +1,5 @@
+var dingSound;
+
 function showModal(head, body) {
     var popUp = $("<div id=\"modalPopUp\" class=\"modal fade\" role=\"dialog\">\n" +
         "        <div class=\"modal-dialog modal-xl\">\n" +
@@ -23,4 +25,5 @@ function showModal(head, body) {
     $(clone).appendTo($("#modalPlace"));
     $(clone).modal({show: false});
     $(clone).modal("show");
-};
+
+}

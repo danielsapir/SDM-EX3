@@ -249,10 +249,30 @@ public class OneStoreOrder extends Order {
     private void giveNewOrderNotification()
     {
         String message= String.format
-                ("Customer %s made an order ,from store you own: %s , wich cost: %.2f",this.getCustomer().getName(),this.getStoreOrderMadeFrom().getName(),this.getTotalPrice() );
+                ("Order ID:%d Customer %s made an order." +
+                        " The order has %d type of items in it." +
+                                " Total price for items is: %.2f and price of delivery is %.2f",
+                        this.id,
+                        this.getCustomer().getName(),
+                        this.getNumOfTypesOfItemsInOrder(),
+                        this.priceOfAllItems,this.deliveryPrice);
+
 
         Notification notification=new Notification(Notification.Type.NewOrder,message);
         this.storeOrderMadeFrom.getOwner().addNotification(notification);
+    }
+
+    public int getNumOfTypesOfItemsInOrder() {
+        Set<Integer> itemsIdSet = new HashSet<>();
+        for(OrderItem orderItem : orderItemCart.values()) {
+            itemsIdSet.add(orderItem.getItemInOrder().getItem().getId());
+        }
+
+        for(OrderItem orderItem : itemsBoughtWithDiscount.values()) {
+            itemsIdSet.add(orderItem.getItemInOrder().getItem().getId());
+        }
+
+        return itemsIdSet.size();
     }
 
     //noy 13/11

@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label for="storePPKInput">PPK: </label>
-                            <input class="form-control" type="number" value="0" id="storePPKInput" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
+                            <input class="form-control" type="number" value="0" min="0" id="storePPKInput" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
                         </div>
                     </div>
                     <div class="row invisible" id="locationErr">

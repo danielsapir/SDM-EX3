@@ -274,14 +274,18 @@ public class Zone
     
 
     //13/11 NOY
-    public Store openNewStore(String newStoreName,Location newStoreLocation, int ppk)
+    public Store openNewStore(String newStoreName,Location newStoreLocation, int ppk, Owner ownerOfStore)
     {
         Store store=new Store();
         store.setId(this.getUniqueStoreId());
-        store.setOwner(owner);
+        store.setOwner(ownerOfStore);
         store.setName(newStoreName);
         store.setLocation(newStoreLocation);
         store.setDeliveryPPK(ppk);
+
+        allStores.put(store.getId(), store);
+        owner.getOwnerStores().put(store.getId(),store);
+
         return(store);
     }
 
@@ -321,7 +325,7 @@ public class Zone
     {
         String message= String.format
                 ("%s opened a new store named: %s, in yor zone: %s. " +
-                                "/n the store located in:(%d,%d),/n and the store sales %d of %d."
+                                "<br> the store located in:(%d,%d),<br> and the store sales %d of %d."
                         ,store.getOwner().getName(),store.getName(),this.name, store.getLocation().getXLocation(),store.getLocation().getYLocation(),store.getItemsThatSellInThisStore().size(),this.allItems.size() );
 
         Notification notification=new Notification(Notification.Type.NewStore,message);
