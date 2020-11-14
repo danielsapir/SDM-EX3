@@ -11,6 +11,11 @@ $(function () {
 
         //user = {userName:"moshe", userType:"OWNER/CUSTOMER",...}
         success: function (user) {
+
+            if(user === null) {
+                window.location.replace(buildUrlWithContextPath("login/login.html"));
+            }
+
             $("#user-name-placeholder").text(user.userName);
             userType = user.userType;
             if(user.userType === "OWNER") {
@@ -199,11 +204,15 @@ $(function() { // onload...do
             data: formData,
             processData: false,
             contentType: false,
-            error: function(errorMessage) {
-                showModal("Failed!", "The file couldn't be loaded please try again!\nFailure reason: "+ errorMessage);
-            },
+
+            //res = {succeeded: true/false,  message:"Error.."}
             success: function(res) {
-                showModal("File has been loaded!", "The file had been loaded successfully!");
+                if(res.succeeded) {
+                    showModal("File has been loaded!", "The file had been loaded successfully!");
+                }
+                else {
+                    showModal("Error! File could not be loaded!", res.message);
+                }
             }
         });
 

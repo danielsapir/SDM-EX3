@@ -2,6 +2,7 @@ var ZONE_PAGE_URL = buildUrlWithContextPath("zonepage");
 var DASHBOARD_URL = buildUrlWithContextPath("dashboard");
 var userType;
 var fetchedStores;
+var fetchedItems;
 var ownerScriptIsLoaded = false;
 var userName;
 
@@ -15,6 +16,10 @@ $(function () {
 
         //user = {userName:"moshe", userType:"OWNER/CUSTOMER",...}
         success: function (user) {
+            if(user === null) {
+                window.location.replace(buildUrlWithContextPath("login/login.html"));
+            }
+
             $("#user-name-placeholder").text(user.userName);
             userType = user.userType;
             userName = user.userName;
@@ -53,6 +58,8 @@ function updateItemsInfo(){
 
         //items = [{id: 12, name: "Milki", type:"QUANTITY"/"WEIGHT", numOfStoresSellThisItem: 23, avgPrice: 23.5, totalAmountSoldOnAllStores:123.5}...]
         success: function (items) {
+            fetchedItems = items;
+
             var itemsTableBody = $("#items-table").find("tbody");
             itemsTableBody.empty();
 

@@ -1,5 +1,18 @@
 var OWNER_ZONE_INFO_URL = buildUrlWithContextPath("ownerzoneinfo");
 
+$(function () {
+    $("#openStoreBtn").click(function () {
+        $(this).addClass("disabled");
+        $(this).attr("disabled", "disabled");
+        $("#cartPic").animate({left:($("#openStoreDiv").width() - $("#openStoreBtn").width() - $("#cartPic").width()-30) + "px"});
+        $.get(buildUrlWithContextPath("zonePage/ownerOpenStore/ownerOpenStore.html"),function(htmlFile) {
+            $("#storeOpenContainer").html(htmlFile).hide();
+            $("#storeOpenContainer").show(1000);
+            $.getScript(buildUrlWithContextPath("zonePage/ownerOpenStore/ownerOpenStore.js"));
+        });
+    });
+})
+
 function makeOrderItemsTable(order) {
     let orderItemsTable = $(" <div class=\"row\">\n" +
         "        <table class=\"table table-hover col-sm-12\">\n" +

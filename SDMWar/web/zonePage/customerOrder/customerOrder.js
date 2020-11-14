@@ -73,7 +73,7 @@ function checkIfStoreLocationIsOk(store) {
             return false;
         }
     }
-    $("#locationErrorPlaceHolder").text("").addClass("errorText");
+    $("#locationErrorPlaceHolder").text("").removeClass("errorText");
     $("#deliveryPriceHolder").removeClass("errorText");
     $("#firstStepBtn").removeAttr("disabled","disabled");
     return true;
