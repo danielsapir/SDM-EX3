@@ -45,7 +45,10 @@ public class Owner extends User
             {
                 for (OneStoreOrder oneStoreOrder:store.getOrders())
                 {
-                    feedBacks.add(oneStoreOrder.getFeedBack());
+                    if(oneStoreOrder.getFeedBack()!=null)
+                    {
+                        feedBacks.add(oneStoreOrder.getFeedBack());
+                    }
                 }
             }
         }
