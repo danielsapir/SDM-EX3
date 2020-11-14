@@ -65,7 +65,7 @@ public class User
     }
 
 
-    public synchronized List getAndRemoveAllNotifications()
+    public synchronized List<Notification> getAndRemoveAllNotifications()
     {
         List<Notification> notificationsList=new LinkedList<>();
 

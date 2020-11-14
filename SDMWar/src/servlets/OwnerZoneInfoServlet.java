@@ -18,6 +18,7 @@ import java.util.LinkedList;
 public class OwnerZoneInfoServlet extends HttpServlet {
     //Request type (aka reqType) constants
     private static final String GET_ALL_FEEDBACKS = "get-all-feedbacks";
+    private static final String OWNER_NOTIFICATIONS = "owner-notifications";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -46,6 +47,11 @@ public class OwnerZoneInfoServlet extends HttpServlet {
                 synchronized (owner) {
 
                     jsonRes = gson.toJson(owner.feedBacksOfOwnerInTheZone(SessionUtils.getCurrentZone(req)));
+                }
+                break;
+            case OWNER_NOTIFICATIONS:
+                synchronized (owner) {
+                    jsonRes = gson.toJson(owner.getAndRemoveAllNotifications());
                 }
                 break;
         }
